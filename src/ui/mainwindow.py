@@ -1,5 +1,5 @@
 from PyQt6.QtGui import QAction
-from PyQt6.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QTextEdit, QPlainTextEdit
+from PyQt6.QtWidgets import QMainWindow, QVBoxLayout, QWidget
 
 from src.ui.dialogues.script_config_dialog import ScriptConfigDialog
 from src.ui.widgets.editor_pane import EditorPane
