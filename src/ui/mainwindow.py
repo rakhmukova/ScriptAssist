@@ -7,7 +7,7 @@ from src.ui.widgets.output_pane import OutputPane
 
 
 class MainWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, start_config):
         super().__init__()
 
         self.setWindowTitle('ScriptAssist')
@@ -34,7 +34,7 @@ class MainWindow(QMainWindow):
         self.edit_config_action.triggered.connect(self.edit_script_config)
         self.addAction(self.edit_config_action)
 
-        self.current_config = None
+        self.current_config = start_config
 
     def edit_script_config(self):
         config_dialog = ScriptConfigDialog()

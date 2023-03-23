@@ -1,13 +1,16 @@
 from PyQt6.QtWidgets import QApplication
 
+from src.ui.dialogues.start_dialog import StartDialog
 from src.ui.mainwindow import MainWindow
 
 if __name__ == '__main__':
     app = QApplication([])
-    window = MainWindow()
-
     with open("resources/styles.qss", "r") as file:
         app.setStyleSheet(file.read())
 
-    window.show()
-    app.exec()
+    start_dialog = StartDialog()
+    if start_dialog.exec():
+        start_config = start_dialog.get_script_config()
+        main_window = MainWindow(start_config)
+        main_window.show()
+        app.exec()
