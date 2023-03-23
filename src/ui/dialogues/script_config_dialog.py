@@ -8,7 +8,7 @@ class ScriptConfigDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
 
-        self.setWindowTitle('Run Configuration')
+        self.setWindowTitle('Script Configuration')
         self.setGeometry(300, 200, 600, 150)
 
         self.path_label = QLabel('Script path:')
