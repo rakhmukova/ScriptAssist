@@ -1,3 +1,4 @@
+from PyQt6.QtGui import QAction
 from PyQt6.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QTextEdit, QPlainTextEdit
 
 from src.ui.widgets.editor_pane import EditorPane
@@ -21,3 +22,8 @@ class MainWindow(QMainWindow):
 
         layout.addWidget(self.editor_pane, stretch=2)
         layout.addWidget(self.output_pane, stretch=1)
+
+        self.run_action = QAction('Run', self)
+        self.run_action.setShortcut('Ctrl+R')
+        self.run_action.triggered.connect(self.output_pane.run_script)
+        self.addAction(self.run_action)
