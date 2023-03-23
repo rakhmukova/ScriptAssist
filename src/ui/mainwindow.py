@@ -35,11 +35,13 @@ class MainWindow(QMainWindow):
         self.addAction(self.edit_config_action)
 
         self.current_config = start_config
+        self.upload_script()
 
     def edit_script_config(self):
         config_dialog = ScriptConfigDialog()
-        config_dialog.exec()
-        self.current_config = config_dialog.get_script_config()
+        if config_dialog.exec():
+            self.current_config = config_dialog.get_script_config()
+            self.upload_script()
 
     def upload_script(self):
         self.editor_pane.clear()
