@@ -15,7 +15,6 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(central_widget)
 
         layout = QVBoxLayout(central_widget)
-        self.setLayout(layout)
 
         self.editor_pane = EditorPane()
         self.output_pane = OutputPane()
