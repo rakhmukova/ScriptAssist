@@ -1,5 +1,8 @@
 from PyQt6.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QTextEdit, QPlainTextEdit
 
+from src.ui.widgets.editor_pane import EditorPane
+from src.ui.widgets.output_pane import OutputPane
+
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -14,8 +17,8 @@ class MainWindow(QMainWindow):
         layout = QVBoxLayout(central_widget)
         self.setLayout(layout)
 
-        self.editor_pane = QPlainTextEdit()
-        self.output_pane = QTextEdit()
+        self.editor_pane = EditorPane()
+        self.output_pane = OutputPane()
 
         layout.addWidget(self.editor_pane, stretch=2)
         layout.addWidget(self.output_pane, stretch=1)
