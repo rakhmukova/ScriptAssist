@@ -40,3 +40,17 @@ class MainWindow(QMainWindow):
         config_dialog = ScriptConfigDialog()
         config_dialog.exec()
         self.current_config = config_dialog.get_script_config()
+
+    def upload_script(self):
+        self.editor_pane.clear()
+        file_path = self.current_config.path
+        with open(file_path, 'r') as f:
+            script_content = f.read()
+
+        self.editor_pane.appendPlainText(script_content)
+
+    def save_script(self):
+        file_path = self.current_config.path
+        script_content = self.editor_pane.toPlainText()
+        with open(file_path, 'w') as f:
+            f.write(script_content)
