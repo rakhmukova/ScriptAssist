@@ -5,11 +5,13 @@ from src.models.script_config import ScriptConfig
 
 
 class ScriptConfigDialog(QDialog):
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, to_open=True):
         super().__init__(parent)
 
+        self.to_open = to_open
+
         self.setWindowTitle('Script Configuration')
-        self.setGeometry(300, 200, 600, 150)
+        self.setFixedSize(600, 250)
 
         self.path_label = QLabel('Script path:')
         self.path_edit = QLineEdit()
@@ -52,8 +54,13 @@ class ScriptConfigDialog(QDialog):
     def browse_path(self):
         script_type = self.script_type_combobox.currentText()
         extension_option = 'Kotlin Files (*.kts)' if script_type == 'Kotlin' else 'Swift Files (*.swift)'
-        file_name, _ = QFileDialog.getOpenFileName(self, 'Select Script File',
-                                                   '', f'{extension_option};;All Files (*)')
+        all_files_option = 'All Files (*)'
+        if self.to_open:
+            file_name, _ = QFileDialog.getOpenFileName(self, 'Select File',
+                                                       filter=f'{extension_option};;{all_files_option}')
+        else:
+            file_name, _ = QFileDialog.getSaveFileName(self, 'Select Path')
+
         if file_name:
             self.path_edit.setText(file_name)
 
