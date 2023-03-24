@@ -26,7 +26,7 @@ class MainWindow(QMainWindow):
 
         self.run_action = QAction('Run', self)
         self.run_action.setShortcut('Ctrl+R')
-        self.run_action.triggered.connect(self.output_pane.run_script)
+        self.run_action.triggered.connect(self.run_script)
         self.addAction(self.run_action)
 
         self.edit_config_action = QAction('Edit configuration', self)
@@ -42,6 +42,10 @@ class MainWindow(QMainWindow):
         if config_dialog.exec():
             self.current_config = config_dialog.get_script_config()
             self.upload_script()
+
+    def run_script(self):
+        self.save_script()
+        self.output_pane.run_script(self.current_config)
 
     def upload_script(self):
         self.editor_pane.clear()
