@@ -1,10 +1,11 @@
 from PyQt6.QtGui import QAction
-from PyQt6.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QHBoxLayout, QLabel
+from PyQt6.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QHBoxLayout
 
 from src.ui.dialogues.script_config_dialog import ScriptConfigDialog
 from src.ui.widgets.editor_pane import EditorPane
 from src.ui.widgets.line_number_area import LineNumberArea
 from src.ui.widgets.output_pane import OutputPane
+from src.ui.widgets.top_panel import TopPanel
 
 
 class MainWindow(QMainWindow):
@@ -23,9 +24,10 @@ class MainWindow(QMainWindow):
         layout.setContentsMargins(0, 0, 0, 0)
 
         self.current_config = None
-        self.script_name_label = QLabel()
-        self.script_name_label.setObjectName('scriptLabel')
-        self.script_name_label.setFixedHeight(27)
+
+        self.top_panel = TopPanel()
+        self.top_panel.run_button.clicked.connect(self.run_script)
+        self.top_panel.edit_config_button.clicked.connect(self.edit_script_config)
 
         self.editor_pane = EditorPane()
 
@@ -42,7 +44,7 @@ class MainWindow(QMainWindow):
 
         self.output_pane = OutputPane()
 
-        layout.addWidget(self.script_name_label)
+        layout.addWidget(self.top_panel)
         layout.addLayout(editor_layout, stretch=2)
         layout.addWidget(self.output_pane, stretch=1)
 
@@ -64,7 +66,7 @@ class MainWindow(QMainWindow):
         self.output_pane.set_script_config(config)
 
         file_name = config.path.split('/')[-1]
-        self.script_name_label.setText(file_name)
+        self.top_panel.script_name_label.setText(file_name)
 
     def edit_script_config(self):
         config_dialog = ScriptConfigDialog(self.current_config)

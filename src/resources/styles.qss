@@ -9,7 +9,16 @@ QPlainTextEdit {
 }
 
 #scriptLabel {
-    background-color: white;
-    border-bottom: 1px solid grey;
-    padding-left: 2px;
+    background-color: transparent;
+    margin-left: 2px;
+}
+
+#runButton{
+    background-color: transparent;
+    width: 8px;
+}
+
+#editConfigButton {
+    background-color: transparent;
+    width: 8px;
 }
