@@ -67,6 +67,5 @@ class ScriptConfigDialog(QDialog):
     def get_script_config(self):
         return ScriptConfig(
             self.path_edit.text(),
-            self.script_type_combobox.currentText(),
             self.args_edit.text() if self.args_edit.text() else None
         )
