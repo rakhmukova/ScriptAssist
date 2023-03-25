@@ -21,7 +21,7 @@ class StartDialog(QDialog):
 
         self.setLayout(layout)
 
-        self.start_config = None
+        self.script_config = None
 
     def on_open_clicked(self):
         self.handle_choice(True)
@@ -30,10 +30,10 @@ class StartDialog(QDialog):
         self.handle_choice(False)
 
     def handle_choice(self, to_open):
-        config_dialog = ScriptConfigDialog(to_open=to_open)
+        config_dialog = ScriptConfigDialog(self.script_config, to_open=to_open)
         if config_dialog.exec():
             self.accept()
-            self.start_config = config_dialog.get_script_config()
+            self.script_config = config_dialog.get_script_config()
 
     def get_script_config(self):
-        return self.start_config
+        return self.script_config

@@ -5,6 +5,7 @@ from PyQt6.QtCore import QObject, pyqtSignal
 
 class ScriptConfig(QObject):
     EXTENSION_TO_SCRIPT_TYPE = {
+        '': '',
         '.kts': 'Kotlin',
         '.swift': 'Swift',
     }
@@ -13,8 +14,12 @@ class ScriptConfig(QObject):
     script_type_changed = pyqtSignal(str)
     parameters_changed = pyqtSignal(object)
 
-    def __init__(self, path, parameters=None):
+    def __init__(self, path=None, parameters=None):
         super().__init__()
+        if path is None:
+            path = ''
+        if parameters is None:
+            parameters = []
         self._path = path
         self._script_type = self.define_script_type(path)
         self._parameters = parameters
