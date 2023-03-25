@@ -45,9 +45,9 @@ class MainWindow(QMainWindow):
         self.run_indication_label = QLabel()
         self.run_indication_label.setObjectName('runIndicationLabel')
         self.run_indication_label.setFixedHeight(25)
-        self.run_indication_label.setText('Ready')
 
         self.output_pane = OutputPane()
+        self.output_pane.script_finished.connect(self.show_finish_result)
 
         layout.addWidget(self.top_panel)
         layout.addLayout(editor_layout, stretch=2)
@@ -74,6 +74,9 @@ class MainWindow(QMainWindow):
         file_name = config.path.split('/')[-1]
         self.top_panel.script_name_label.setText(file_name)
 
+        self.run_indication_label.setText('Ready')
+        self.run_indication_label.setStyleSheet('color: black')
+
     def edit_script_config(self):
         config_dialog = ScriptConfigDialog(self.current_config)
         if config_dialog.exec():
@@ -83,3 +86,14 @@ class MainWindow(QMainWindow):
     def run_script(self):
         self.editor_pane.save_script()
         self.output_pane.run_script()
+        self.run_indication_label.setText('Running...')
+        self.run_indication_label.setStyleSheet('color: black')
+
+    def show_finish_result(self, exit_code):
+        if exit_code == 0:
+            result_text = 'Finished successfully'
+        else:
+            result_text = f'Finished with exit code {exit_code}'
+            self.run_indication_label.setStyleSheet('color: darkred')
+
+        self.run_indication_label.setText(result_text)
