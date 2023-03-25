@@ -1,4 +1,4 @@
-from PyQt6.QtCore import pyqtSlot, pyqtSignal, QThreadPool
+from PyQt6.QtCore import pyqtSlot, QThreadPool, pyqtSignal
 from PyQt6.QtWidgets import QTextEdit
 
 from src.models.runner_factory import RunnerFactory
@@ -6,7 +6,7 @@ from src.models.script_runnable import ScriptRunnable
 
 
 class OutputPane(QTextEdit):
-    new_user_input = pyqtSignal(str)
+    script_finished = pyqtSignal(int)
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -26,6 +26,7 @@ class OutputPane(QTextEdit):
         script_runner = RunnerFactory.get_runner(self.current_config)
         script_runner.new_output.connect(self.display_stdout)
         script_runner.new_error.connect(self.display_stderr)
+        script_runner.process_finished.connect(self.handle_finish)
 
         script_runnable = ScriptRunnable(script_runner)
         pool = QThreadPool.globalInstance()
@@ -39,5 +40,6 @@ class OutputPane(QTextEdit):
     def display_stderr(self, error):
         self.append(error)
 
-    def handle_finish(self):
-        pass
+    @pyqtSlot(int)
+    def handle_finish(self, exit_code):
+        self.script_finished.emit(exit_code)
