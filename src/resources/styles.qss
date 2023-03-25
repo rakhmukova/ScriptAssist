@@ -22,3 +22,13 @@ QPlainTextEdit {
     background-color: transparent;
     width: 8px;
 }
+
+#runIndicationLabel {
+    padding-left: 2px;
+    border-top: 1px solid lightgrey;
+    border-bottom: 1px solid lightgrey;
+}
+
+#outputPane {
+    border: 0;
+}

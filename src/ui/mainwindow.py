@@ -1,5 +1,5 @@
 from PyQt6.QtGui import QAction
-from PyQt6.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QHBoxLayout
+from PyQt6.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QHBoxLayout, QLabel
 
 from src.ui.dialogues.script_config_dialog import ScriptConfigDialog
 from src.ui.widgets.editor_pane import EditorPane
@@ -42,10 +42,16 @@ class MainWindow(QMainWindow):
         editor_layout.addWidget(self.line_number_area)
         editor_layout.addWidget(self.editor_pane)
 
+        self.run_indication_label = QLabel()
+        self.run_indication_label.setObjectName('runIndicationLabel')
+        self.run_indication_label.setFixedHeight(25)
+        self.run_indication_label.setText('Ready')
+
         self.output_pane = OutputPane()
 
         layout.addWidget(self.top_panel)
         layout.addLayout(editor_layout, stretch=2)
+        layout.addWidget(self.run_indication_label)
         layout.addWidget(self.output_pane, stretch=1)
 
         self.set_script_config(start_config)
