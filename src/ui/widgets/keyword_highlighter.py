@@ -2,7 +2,7 @@ from PyQt6.QtCore import QRegularExpression
 from PyQt6.QtGui import QSyntaxHighlighter, QTextCharFormat
 
 
-class KeywordsHighlighter(QSyntaxHighlighter):
+class KeywordHighlighter(QSyntaxHighlighter):
     def __init__(self, keywords, color, parent=None):
         super().__init__(parent)
         self.keywords = keywords

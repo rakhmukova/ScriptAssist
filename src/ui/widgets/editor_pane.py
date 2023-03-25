@@ -1,8 +1,8 @@
 from PyQt6.QtGui import QColor
 from PyQt6.QtWidgets import QPlainTextEdit
 
-from src.models.keywords_chooser import KeywordChooser
-from src.ui.widgets.keyword_highlighter import KeywordsHighlighter
+from src.models.keyword_chooser import KeywordChooser
+from src.ui.widgets.keyword_highlighter import KeywordHighlighter
 
 
 class EditorPane(QPlainTextEdit):
@@ -19,7 +19,7 @@ class EditorPane(QPlainTextEdit):
         self.current_config = script_config
         self.upload_from_config()
         keywords = KeywordChooser.get_keywords(self.current_config.script_type)
-        self.highlighter = KeywordsHighlighter(keywords, self.keyword_color, self.document())
+        self.highlighter = KeywordHighlighter(keywords, self.keyword_color, self.document())
 
     def upload_from_config(self):
         self.clear()
