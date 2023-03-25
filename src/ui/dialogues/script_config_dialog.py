@@ -7,7 +7,7 @@ from src.models.script_config import ScriptConfig
 
 
 class ScriptConfigDialog(QDialog):
-    def __init__(self, script_config, parent=None, to_open=True):
+    def __init__(self, script_config=None, parent=None, to_open=True):
         super().__init__(parent)
 
         self.to_open = to_open
@@ -56,7 +56,8 @@ class ScriptConfigDialog(QDialog):
 
         self.enable_accept_button(False)
 
-        self.set_initial_values(script_config)
+        if script_config is not None:
+            self.set_initial_values(script_config)
 
     def set_initial_values(self, current_config):
         self.path_edit.setText(current_config.path)
