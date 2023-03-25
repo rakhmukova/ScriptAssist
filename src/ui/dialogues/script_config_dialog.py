@@ -1,3 +1,5 @@
+import os
+
 from PyQt6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QFileDialog, \
     QComboBox, QDialogButtonBox
 
@@ -78,6 +80,9 @@ class ScriptConfigDialog(QDialog):
             file_name, _ = QFileDialog.getSaveFileName(self, 'Select Path', filter=f'{extension_option}')
 
         if file_name:
+            if not os.path.exists(file_name):
+                with open(file_name, 'a'):
+                    pass
             self.path_edit.setText(file_name)
             self.enable_accept_button(True)
 
