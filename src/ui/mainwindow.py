@@ -18,8 +18,9 @@ class MainWindow(QMainWindow):
 
         layout = QVBoxLayout(central_widget)
 
-        self.editor_pane = EditorPane()
-        self.output_pane = OutputPane()
+        self.current_config = start_config
+        self.editor_pane = EditorPane(start_config)
+        self.output_pane = OutputPane(start_config)
 
         layout.addWidget(self.editor_pane, stretch=2)
         layout.addWidget(self.output_pane, stretch=1)
@@ -34,29 +35,13 @@ class MainWindow(QMainWindow):
         self.edit_config_action.triggered.connect(self.edit_script_config)
         self.addAction(self.edit_config_action)
 
-        self.current_config = start_config
-        self.upload_script()
-
     def edit_script_config(self):
-        config_dialog = ScriptConfigDialog()
+        config_dialog = ScriptConfigDialog(self.current_config)
         if config_dialog.exec():
             self.current_config = config_dialog.get_script_config()
-            self.upload_script()
+            self.editor_pane.set_script_config(self.current_config)
+            self.output_pane.set_script_config(self.current_config)
 
     def run_script(self):
-        self.save_script()
-        self.output_pane.run_script(self.current_config)
-
-    def upload_script(self):
-        self.editor_pane.clear()
-        file_path = self.current_config.path
-        with open(file_path, 'r') as f:
-            script_content = f.read()
-
-        self.editor_pane.appendPlainText(script_content)
-
-    def save_script(self):
-        file_path = self.current_config.path
-        script_content = self.editor_pane.toPlainText()
-        with open(file_path, 'w') as f:
-            f.write(script_content)
+        self.editor_pane.save_script()
+        self.output_pane.run_script()
