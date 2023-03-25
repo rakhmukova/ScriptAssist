@@ -1,9 +1,15 @@
 QPlainTextEdit {
     background-color: white;
     padding-left: 2px;
-    border: none;
+    border: 0;
 }
 
 #lineNumberArea {
     color: grey;
+}
+
+#scriptLabel {
+    background-color: white;
+    border-bottom: 1px solid grey;
+    padding-left: 2px;
 }

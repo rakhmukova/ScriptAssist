@@ -6,14 +6,12 @@ from src.ui.widgets.keyword_highlighter import KeywordHighlighter
 
 
 class EditorPane(QPlainTextEdit):
-    def __init__(self, start_config, parent=None):
+    def __init__(self, parent=None):
         super().__init__(parent)
         self.current_config = None
         self.highlighter = None
         self.keyword_color = QColor(0, 0, 255)  # blue color
         self.setObjectName('editorPane')
-
-        self.set_script_config(start_config)
 
     def set_script_config(self, script_config):
         self.current_config = script_config

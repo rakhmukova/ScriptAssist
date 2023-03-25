@@ -1,5 +1,5 @@
 from PyQt6.QtGui import QAction
-from PyQt6.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QHBoxLayout
+from PyQt6.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QHBoxLayout, QLabel
 
 from src.ui.dialogues.script_config_dialog import ScriptConfigDialog
 from src.ui.widgets.editor_pane import EditorPane
@@ -22,9 +22,12 @@ class MainWindow(QMainWindow):
         layout.setSpacing(0)
         layout.setContentsMargins(0, 0, 0, 0)
 
-        self.current_config = start_config
-        self.editor_pane = EditorPane(start_config)
-        self.output_pane = OutputPane(start_config)
+        self.current_config = None
+        self.script_name_label = QLabel()
+        self.script_name_label.setObjectName('scriptLabel')
+        self.script_name_label.setFixedHeight(27)
+
+        self.editor_pane = EditorPane()
 
         self.line_number_area = LineNumberArea(self.editor_pane)
         self.line_number_area.setFixedWidth(50)
@@ -37,8 +40,13 @@ class MainWindow(QMainWindow):
         editor_layout.addWidget(self.line_number_area)
         editor_layout.addWidget(self.editor_pane)
 
+        self.output_pane = OutputPane()
+
+        layout.addWidget(self.script_name_label)
         layout.addLayout(editor_layout, stretch=2)
         layout.addWidget(self.output_pane, stretch=1)
+
+        self.set_script_config(start_config)
 
         self.run_action = QAction('Run', self)
         self.run_action.setShortcut('Ctrl+R')
@@ -50,12 +58,19 @@ class MainWindow(QMainWindow):
         self.edit_config_action.triggered.connect(self.edit_script_config)
         self.addAction(self.edit_config_action)
 
+    def set_script_config(self, config):
+        self.current_config = config
+        self.editor_pane.set_script_config(config)
+        self.output_pane.set_script_config(config)
+
+        file_name = config.path.split('/')[-1]
+        self.script_name_label.setText(file_name)
+
     def edit_script_config(self):
         config_dialog = ScriptConfigDialog(self.current_config)
         if config_dialog.exec():
-            self.current_config = config_dialog.get_script_config()
-            self.editor_pane.set_script_config(self.current_config)
-            self.output_pane.set_script_config(self.current_config)
+            config = config_dialog.get_script_config()
+            self.set_script_config(config)
 
     def run_script(self):
         self.editor_pane.save_script()
