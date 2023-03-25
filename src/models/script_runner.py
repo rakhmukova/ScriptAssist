@@ -7,6 +7,7 @@ from PyQt6.QtCore import QObject, pyqtSignal
 class ScriptRunner(QObject):
     new_output = pyqtSignal(str)
     new_error = pyqtSignal(str)
+    process_finished = pyqtSignal(int)
 
     def __init__(self, interpreter_path, interpreter_options, script_path, parameters=None):
         super().__init__()
@@ -42,7 +43,8 @@ class ScriptRunner(QObject):
 
         stdout.close()
         stderr.close()
-        self.process.wait()
+        exit_code = self.process.wait()
+        self.process_finished.emit(exit_code)
 
     def run(self):
         self.start_process()
