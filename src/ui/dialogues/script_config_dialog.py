@@ -1,3 +1,5 @@
+import os
+
 from PyQt6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QFileDialog, \
     QComboBox, QDialogButtonBox
 
@@ -5,7 +7,7 @@ from src.models.script_config import ScriptConfig
 
 
 class ScriptConfigDialog(QDialog):
-    def __init__(self, parent=None, to_open=True):
+    def __init__(self, parent=None, to_open=True, current_config=None):
         super().__init__(parent)
 
         self.to_open = to_open
@@ -23,6 +25,7 @@ class ScriptConfigDialog(QDialog):
         self.script_type_label = QLabel('Script type:')
         self.script_type_combobox = QComboBox()
         self.script_type_combobox.addItems(['Swift', 'Kotlin'])
+        self.script_type_combobox.currentIndexChanged.connect(self.script_type_changed)
 
         self.path_button.clicked.connect(self.browse_path)
 
@@ -44,29 +47,56 @@ class ScriptConfigDialog(QDialog):
         script_type_layout.addWidget(self.script_type_combobox)
         layout.addLayout(script_type_layout)
 
-        button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
-        button_box.accepted.connect(self.accept)
-        button_box.rejected.connect(self.reject)
-        layout.addWidget(button_box)
+        self.button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
+        self.button_box.accepted.connect(self.accept)
+        self.button_box.rejected.connect(self.reject)
+        layout.addWidget(self.button_box)
 
         self.setLayout(layout)
+
+        self.enable_accept_button(False)
+
+        if current_config is not None:
+            self.set_initial_values(current_config)
+
+    def set_initial_values(self, current_config):
+        self.path_edit.setText(current_config.path)
+        parameters = ' '.join([str(param) for param in current_config.parameters])
+        self.args_edit.setText(parameters)
+        script_type = current_config.script_type
+        index = self.script_type_combobox.findText(script_type)
+        if index >= 0:
+            self.script_type_combobox.setCurrentIndex(index)
+
+        self.enable_accept_button(True)
 
     def browse_path(self):
         script_type = self.script_type_combobox.currentText()
         extension_option = 'Kotlin Files (*.kts)' if script_type == 'Kotlin' else 'Swift Files (*.swift)'
-        all_files_option = 'All Files (*)'
         if self.to_open:
             file_name, _ = QFileDialog.getOpenFileName(self, 'Select File',
-                                                       filter=f'{extension_option};;{all_files_option}')
+                                                       filter=f'{extension_option}')
         else:
-            file_name, _ = QFileDialog.getSaveFileName(self, 'Select Path')
+            file_name, _ = QFileDialog.getSaveFileName(self, 'Select Path', filter=f'{extension_option}')
 
         if file_name:
+            if not os.path.exists(file_name):
+                with open(file_name, 'a'):
+                    pass
             self.path_edit.setText(file_name)
+            self.enable_accept_button(True)
+
+    def script_type_changed(self):
+        self.path_edit.clear()
+        self.enable_accept_button(False)
 
     def get_script_config(self):
+        path = self.path_edit.text()
+        args = self.args_edit.text().split()
         return ScriptConfig(
-            self.path_edit.text(),
-            self.script_type_combobox.currentText(),
-            self.args_edit.text() if self.args_edit.text() else None
+            path,
+            args
         )
+
+    def enable_accept_button(self, to_enable):
+        self.button_box.button(QDialogButtonBox.StandardButton.Ok).setEnabled(to_enable)

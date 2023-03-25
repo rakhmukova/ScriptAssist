@@ -38,7 +38,7 @@ class MainWindow(QMainWindow):
         self.upload_script()
 
     def edit_script_config(self):
-        config_dialog = ScriptConfigDialog()
+        config_dialog = ScriptConfigDialog(current_config=self.current_config)
         if config_dialog.exec():
             self.current_config = config_dialog.get_script_config()
             self.upload_script()
