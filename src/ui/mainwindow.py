@@ -15,9 +15,12 @@ class MainWindow(QMainWindow):
         self.setGeometry(200, 100, 800, 600)
 
         central_widget = QWidget()
+        central_widget.setObjectName('centralWidget')
         self.setCentralWidget(central_widget)
 
         layout = QVBoxLayout(central_widget)
+        layout.setSpacing(0)
+        layout.setContentsMargins(0, 0, 0, 0)
 
         self.current_config = start_config
         self.editor_pane = EditorPane(start_config)
@@ -29,6 +32,8 @@ class MainWindow(QMainWindow):
         self.editor_pane.verticalScrollBar().valueChanged.connect(self.line_number_area.update_scrollbar)
 
         editor_layout = QHBoxLayout()
+        editor_layout.setSpacing(0)
+        editor_layout.setContentsMargins(0, 0, 0, 0)
         editor_layout.addWidget(self.line_number_area)
         editor_layout.addWidget(self.editor_pane)
 
