@@ -71,12 +71,11 @@ class ScriptConfigDialog(QDialog):
     def browse_path(self):
         script_type = self.script_type_combobox.currentText()
         extension_option = 'Kotlin Files (*.kts)' if script_type == 'Kotlin' else 'Swift Files (*.swift)'
-        all_files_option = 'All Files (*)'
         if self.to_open:
             file_name, _ = QFileDialog.getOpenFileName(self, 'Select File',
-                                                       filter=f'{extension_option};;{all_files_option}')
+                                                       filter=f'{extension_option}')
         else:
-            file_name, _ = QFileDialog.getSaveFileName(self, 'Select Path')
+            file_name, _ = QFileDialog.getSaveFileName(self, 'Select Path', filter=f'{extension_option}')
 
         if file_name:
             self.path_edit.setText(file_name)
