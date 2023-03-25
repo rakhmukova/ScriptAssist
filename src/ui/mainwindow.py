@@ -1,8 +1,9 @@
 from PyQt6.QtGui import QAction
-from PyQt6.QtWidgets import QMainWindow, QVBoxLayout, QWidget
+from PyQt6.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QHBoxLayout
 
 from src.ui.dialogues.script_config_dialog import ScriptConfigDialog
 from src.ui.widgets.editor_pane import EditorPane
+from src.ui.widgets.line_number_area import LineNumberArea
 from src.ui.widgets.output_pane import OutputPane
 
 
@@ -22,7 +23,16 @@ class MainWindow(QMainWindow):
         self.editor_pane = EditorPane(start_config)
         self.output_pane = OutputPane(start_config)
 
-        layout.addWidget(self.editor_pane, stretch=2)
+        self.line_number_area = LineNumberArea(self.editor_pane)
+        self.line_number_area.setFixedWidth(50)
+        self.editor_pane.blockCountChanged.connect(self.line_number_area.update_line_numbers)
+        self.editor_pane.verticalScrollBar().valueChanged.connect(self.line_number_area.update_scrollbar)
+
+        editor_layout = QHBoxLayout()
+        editor_layout.addWidget(self.line_number_area)
+        editor_layout.addWidget(self.editor_pane)
+
+        layout.addLayout(editor_layout, stretch=2)
         layout.addWidget(self.output_pane, stretch=1)
 
         self.run_action = QAction('Run', self)
