@@ -1,4 +1,9 @@
 QPlainTextEdit {
     background-color: white;
     padding-left: 2px;
+    border: none;
+}
+
+#lineNumberArea {
+    color: grey;
 }

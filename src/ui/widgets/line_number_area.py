@@ -7,6 +7,7 @@ class LineNumberArea(QPlainTextEdit):
         super().__init__()
         self.text_edit = text_edit
         self.setReadOnly(True)
+        self.setObjectName('lineNumberArea')
         self.update_line_numbers(self.text_edit.blockCount())
 
         self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
