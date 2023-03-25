@@ -8,12 +8,11 @@ from src.models.script_runnable import ScriptRunnable
 class OutputPane(QTextEdit):
     new_user_input = pyqtSignal(str)
 
-    def __init__(self, start_config, parent=None):
+    def __init__(self, parent=None):
         super().__init__(parent)
         self.current_config = None
         self.setObjectName('outputPane')
 
-        self.set_script_config(start_config)
         self.output_cursor = self.textCursor()
         self.setReadOnly(True)
 

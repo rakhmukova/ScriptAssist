@@ -1,0 +1,34 @@
+QPlainTextEdit {
+    background-color: white;
+    padding-left: 2px;
+    border: 0;
+}
+
+#lineNumberArea {
+    color: grey;
+}
+
+#scriptLabel {
+    background-color: transparent;
+    margin-left: 2px;
+}
+
+#runButton{
+    background-color: transparent;
+    width: 8px;
+}
+
+#editConfigButton {
+    background-color: transparent;
+    width: 8px;
+}
+
+#runIndicationLabel {
+    padding-left: 2px;
+    border-top: 1px solid lightgrey;
+    border-bottom: 1px solid lightgrey;
+}
+
+#outputPane {
+    border: 0;
+}
