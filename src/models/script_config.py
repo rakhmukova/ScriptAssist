@@ -1,53 +1,83 @@
 import os
 
-from PyQt6.QtCore import QObject, pyqtSignal
 
+class ScriptConfig:
+    """
+    Represents a script configuration, including its path, script type, and parameters.
+    """
 
-class ScriptConfig(QObject):
-    EXTENSION_TO_SCRIPT_TYPE = {
+    _EXTENSION_TO_SCRIPT_TYPE = {
         '': '',
         '.kts': 'Kotlin',
         '.swift': 'Swift',
     }
 
-    path_changed = pyqtSignal(str)
-    script_type_changed = pyqtSignal(str)
-    parameters_changed = pyqtSignal(object)
+    def __init__(self, path: str = '', parameters: list = None):
+        """
+        Creates a new ScriptConfig instance.
 
-    def __init__(self, path=None, parameters=None):
-        super().__init__()
-        if path is None:
-            path = ''
+        :param path: The path to the script file.
+        :param parameters: Any additional parameters to pass to the script.
+        """
         if parameters is None:
             parameters = []
-        self._path = path
-        self._script_type = self.define_script_type(path)
-        self._parameters = parameters
+
+        self.__path = path
+        self.__script_type = self.__define_script_type(path)
+        self.__parameters = parameters
 
     @property
-    def path(self):
-        return self._path
+    def path(self) -> str:
+        """
+        Gets the path to the script file.
+
+        :return: The path to the script file.
+        """
+        return self.__path
 
     @path.setter
-    def path(self, new_path):
-        self._path = new_path
-        self._script_type = self.define_script_type(new_path)
-        self.path_changed.emit(new_path)
-        self.script_type_changed.emit(self._script_type)
+    def path(self, new_path: str):
+        """
+        Sets the path to the script file.
+
+        :param new_path: The new path to the script file.
+        """
+        self.__path = new_path
+        self.__script_type = self.__define_script_type(new_path)
 
     @property
-    def script_type(self):
-        return self._script_type
+    def script_type(self) -> str:
+        """
+        Gets the script type.
+
+        :return: The script type.
+        """
+        return self.__script_type
 
     @property
-    def parameters(self):
-        return self._parameters
+    def parameters(self) -> list:
+        """
+        Gets the additional parameters to pass to the script.
+
+        :return: The additional parameters to pass to the script.
+        """
+        return self.__parameters
 
     @parameters.setter
-    def parameters(self, new_parameters):
-        self._parameters = new_parameters
-        self.parameters_changed.emit(new_parameters)
+    def parameters(self, new_parameters: list):
+        """
+        Sets the additional parameters to pass to the script.
 
-    def define_script_type(self, path):
+        :param new_parameters: The new additional parameters to pass to the script.
+        """
+        self.__parameters = new_parameters
+
+    def __define_script_type(self, path: str) -> str:
+        """
+        Determines the script type based on the file extension.
+
+        :param path: The path to the script file.
+        :return: The script type.
+        """
         _, ext = os.path.splitext(path)
-        return self.EXTENSION_TO_SCRIPT_TYPE[ext]
+        return self._EXTENSION_TO_SCRIPT_TYPE[ext]
