@@ -1,8 +1,7 @@
-import os
-
-from PyQt6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QFileDialog, \
+from PyQt6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, \
     QComboBox, QDialogButtonBox
 
+from src.models.file_util import FileUtil
 from src.models.script_config import ScriptConfig
 
 
@@ -74,15 +73,11 @@ class ScriptConfigDialog(QDialog):
         script_type = self.script_type_combobox.currentText()
         extension_option = 'Kotlin Files (*.kts)' if script_type == 'Kotlin' else 'Swift Files (*.swift)'
         if self.to_open:
-            file_name, _ = QFileDialog.getOpenFileName(self, 'Select File',
-                                                       filter=f'{extension_option}')
+            file_name = FileUtil.browse_file(self, extension_option)
         else:
-            file_name, _ = QFileDialog.getSaveFileName(self, 'Select Path', filter=f'{extension_option}')
+            file_name = FileUtil.save_file(self, extension_option)
 
         if file_name:
-            if not os.path.exists(file_name):
-                with open(file_name, 'a'):
-                    pass
             self.path_edit.setText(file_name)
             self.enable_accept_button(True)
 
