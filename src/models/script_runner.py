@@ -24,6 +24,10 @@ class ScriptRunner(QObject):
         self.process.start(self.interpreter_path,
                            self.interpreter_options + [self.script_path] + self.parameters)
 
+    def cancel(self):
+        self.process.terminate()
+        self.process.waitForFinished()
+
     def handle_stderr(self):
         data = self.process.readAllStandardError()
         stderr = bytes(data).decode()

@@ -29,6 +29,15 @@ class OutputPane(QTextEdit):
             self.script_runner.finished.connect(self.handle_finish)
             self.script_runner.run()
 
+    def stop_script(self):
+        if self.script_runner is not None:
+            self.script_runner.cancel()
+            self.script_runner = None
+
+    def rerun_script(self):
+        self.stop_script()
+        self.run_script()
+
     def handle_error(self, error):
         self.append(error)
 

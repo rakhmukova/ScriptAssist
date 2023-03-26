@@ -16,12 +16,14 @@ class TopPanel(QWidget):
         self.script_name_label.setObjectName('scriptLabel')
 
         self.run_button = self.init_button('resources/images/run_green.png', 'runButton', 'Run script')
+        self.stop_button = self.init_button('resources/images/stop_darkred.png', 'stopButton', 'Stop script')
         self.edit_config_button = self.init_button('resources/images/edit_config.png', 'editConfigButton',
                                                    'Edit configuration')
 
         layout.addWidget(self.script_name_label)
         layout.addStretch()
         layout.addWidget(self.run_button)
+        layout.addWidget(self.stop_button)
         layout.addWidget(self.edit_config_button)
 
     @staticmethod
