@@ -14,6 +14,12 @@ class ScriptConfigDialog(QDialog):
         self.setWindowTitle('Script Configuration')
         self.setFixedSize(600, 250)
 
+        self.script_type_label = QLabel('Script type:')
+        self.script_type_label.setObjectName('scriptTypeLabel')
+        self.script_type_combobox = QComboBox()
+        self.script_type_combobox.addItems(['Swift', 'Kotlin'])
+        self.script_type_combobox.currentIndexChanged.connect(self.script_type_changed)
+
         self.path_label = QLabel('Script path:')
         self.path_edit = QLineEdit()
         self.path_button = QPushButton('Browse')
@@ -21,14 +27,15 @@ class ScriptConfigDialog(QDialog):
         self.args_label = QLabel('Parameters:')
         self.args_edit = QLineEdit()
 
-        self.script_type_label = QLabel('Script type:')
-        self.script_type_combobox = QComboBox()
-        self.script_type_combobox.addItems(['Swift', 'Kotlin'])
-        self.script_type_combobox.currentIndexChanged.connect(self.script_type_changed)
-
         self.path_button.clicked.connect(self.browse_path)
 
         layout = QVBoxLayout()
+
+        script_type_layout = QHBoxLayout()
+        script_type_layout.addWidget(self.script_type_label)
+        script_type_layout.addWidget(self.script_type_combobox)
+        script_type_layout.addStretch()
+        layout.addLayout(script_type_layout)
 
         path_layout = QHBoxLayout()
         path_layout.addWidget(self.path_label)
@@ -40,11 +47,6 @@ class ScriptConfigDialog(QDialog):
         args_layout.addWidget(self.args_label)
         args_layout.addWidget(self.args_edit)
         layout.addLayout(args_layout)
-
-        script_type_layout = QHBoxLayout()
-        script_type_layout.addWidget(self.script_type_label)
-        script_type_layout.addWidget(self.script_type_combobox)
-        layout.addLayout(script_type_layout)
 
         self.button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
         self.button_box.accepted.connect(self.accept)
