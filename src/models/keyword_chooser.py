@@ -1,6 +1,15 @@
 class KeywordChooser:
+    """
+    A class that provides a list of commonly used keywords for a given script type.
+    """
     @staticmethod
-    def get_keywords(script_type):
+    def get_keywords(script_type: str) -> list:
+        """
+        Get a list of commonly used keywords for the given script type.
+
+        :param script_type: A string representing the script type (either 'Swift' or 'Kotlin').
+        :return: A list of commonly used keywords for the given script type.
+        """
         if script_type == 'Swift':
             return ['let', 'var', 'if', 'in', 'else', 'switch', 'case', 'default',
                     'for', 'while', 'continue', 'break', 'return', 'func', 
