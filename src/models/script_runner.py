@@ -2,41 +2,59 @@ from PyQt6.QtCore import QObject, pyqtSignal, QProcess
 
 
 class ScriptRunner(QObject):
-    new_output = pyqtSignal(str)
-    new_error = pyqtSignal(str)
+    """
+    Runs scripts using an interpreter specified by the user.
+    """
+    stdout_received = pyqtSignal(str)
+    stderr_received = pyqtSignal(str)
     finished = pyqtSignal(int)
 
-    def __init__(self, interpreter_path, interpreter_options, script_path, parameters=None):
+    def __init__(self, interpreter_path: str, interpreter_options: list, script_path: str,
+                 parameters: list = None):
+        """
+        Creates a new ScriptRunner instance.
+
+        :param interpreter_path: The path to the interpreter that should be used to run the script.
+        :param interpreter_options: The options to pass to the interpreter when running the script.
+        :param script_path: The path to the script file.
+        :param parameters: Any additional parameters to pass to the script.
+        """
         super().__init__()
-        self.interpreter_path = interpreter_path
-        self.interpreter_options = interpreter_options
-        self.script_path = script_path
         if parameters is None:
             parameters = []
-        self.parameters = list(map(str, parameters))
+
+        self.program = interpreter_path
+        self.args = interpreter_options + [script_path] + [str(param) for param in parameters]
 
         self.process = QProcess()
-        self.process.readyReadStandardOutput.connect(self.handle_stdout)
-        self.process.readyReadStandardError.connect(self.handle_stderr)
-        self.process.finished.connect(self.process_finished)
+        self.process.readyReadStandardOutput.connect(self.__handle_stdout)
+        self.process.readyReadStandardError.connect(self.__handle_stderr)
+        self.process.finished.connect(self.__process_finished)
 
     def run(self):
-        self.process.start(self.interpreter_path,
-                           self.interpreter_options + [self.script_path] + self.parameters)
+        """
+        Starts running the script.
+        """
+        self.process.start(self.program, self.args)
 
     def cancel(self):
+        """
+        Cancels the currently running script.
+        """
         self.process.terminate()
         self.process.waitForFinished()
 
-    def handle_stderr(self):
+    def __handle_stderr(self):
         data = self.process.readAllStandardError()
         stderr = bytes(data).decode()
-        self.new_error.emit(stderr)
+        self.stderr_received.emit(stderr)
 
-    def handle_stdout(self):
+    def __handle_stdout(self):
         data = self.process.readAllStandardOutput()
         stdout = bytes(data).decode()
-        self.new_output.emit(stdout)
+        self.stdout_received.emit(stdout)
 
-    def process_finished(self, exit_code):
+    def __process_finished(self, exit_code: int):
         self.finished.emit(exit_code)
+        self.process.deleteLater()
+        self.process = None

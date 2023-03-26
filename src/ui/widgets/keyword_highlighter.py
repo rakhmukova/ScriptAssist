@@ -1,24 +1,40 @@
 from PyQt6.QtCore import QRegularExpression
-from PyQt6.QtGui import QSyntaxHighlighter, QTextCharFormat
+from PyQt6.QtGui import QSyntaxHighlighter, QColor
 
 
 class KeywordHighlighter(QSyntaxHighlighter):
-    def __init__(self, keywords, color, parent=None):
+    """
+    A syntax highlighter for highlighting language keywords in a text block.
+    """
+
+    def __init__(self, keywords: list, color: QColor, parent=None):
+        """
+        Initializes the keyword highlighter with the specified keywords and text color.
+
+        :param keywords: A list of keywords to highlight.
+        :param color: The text color for highlighting the keywords.
+        :param parent: The parent object of the highlighter.
+        """
         super().__init__(parent)
-        self.keywords = keywords
-        self.highlighting_rules = []
-        keyword_format = QTextCharFormat()
-        keyword_format.setForeground(color)
+        self.__keywords = keywords
+        self.__highlighting_rules = []
 
-        self.highlighting_rules = [(QRegularExpression('\\b' + keyword + '\\b'), keyword_format)
-                                   for keyword in keywords]
+        # Set up highlighting rules for the keywords
+        for keyword in self.__keywords:
+            pattern = QRegularExpression("\\b" + keyword + "\\b")
+            rule = (pattern, color)
+            self.__highlighting_rules.append(rule)
 
-    def highlightBlock(self, text):
-        if not text:
-            return
-        for rule, keyword_format in self.highlighting_rules:
-            pattern = QRegularExpression(rule.pattern())
-            match_iterator = pattern.globalMatch(text)
+    def highlightBlock(self, text: str):
+        """
+        Highlights the specified text block using the configured keywords and color.
+
+        :param text: The text block to highlight.
+        """
+
+        # Apply the highlighting rules to the text block
+        for rule, keyword_format in self.__highlighting_rules:
+            match_iterator = rule.globalMatch(text)
             while match_iterator.hasNext():
                 match = match_iterator.next()
                 start_index = match.capturedStart()

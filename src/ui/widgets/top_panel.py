@@ -3,7 +3,16 @@ from PyQt6.QtWidgets import QWidget, QHBoxLayout, QLabel, QPushButton, QToolTip
 
 
 class TopPanel(QWidget):
+    """
+    A widget that displays a top panel with script information and buttons for running and stopping the script.
+    """
+
     def __init__(self, parent=None):
+        """
+        Initializes the top panel widget.
+
+        :param parent: Optional parent widget.
+        """
         super().__init__(parent)
         self.setObjectName('topPanel')
         self.setFixedHeight(30)
@@ -15,10 +24,10 @@ class TopPanel(QWidget):
         self.script_name_label = QLabel()
         self.script_name_label.setObjectName('scriptLabel')
 
-        self.run_button = self.init_button('resources/images/run_green.png', 'runButton', 'Run script')
-        self.stop_button = self.init_button('resources/images/stop_darkred.png', 'stopButton', 'Stop script')
-        self.edit_config_button = self.init_button('resources/images/edit_config.png', 'editConfigButton',
-                                                   'Edit configuration')
+        self.run_button = self.__init_button('resources/images/run_green.png', 'runButton', 'Run script')
+        self.stop_button = self.__init_button('resources/images/stop_darkred.png', 'stopButton', 'Stop script')
+        self.edit_config_button = self.__init_button('resources/images/edit_config.png', 'editConfigButton',
+                                                     'Edit configuration')
 
         layout.addWidget(self.script_name_label)
         layout.addStretch()
@@ -27,7 +36,7 @@ class TopPanel(QWidget):
         layout.addWidget(self.edit_config_button)
 
     @staticmethod
-    def init_button(image_path, button_name, tooltip):
+    def __init_button(image_path: str, button_name: str, tooltip: str) -> QPushButton:
         button = QPushButton()
         pixmap = QPixmap(image_path)
         button.setIcon(QIcon(pixmap))
@@ -35,7 +44,6 @@ class TopPanel(QWidget):
 
         button.setToolTip(tooltip)
         button.setMouseTracking(True)
-        button.enterEvent = lambda event: QToolTip.showText(button.mapToGlobal(button.rect().bottomLeft()),
-                                                            tooltip)
+        button.enterEvent = lambda event: QToolTip.showText(button.mapToGlobal(button.rect().bottomLeft()), tooltip)
         button.leaveEvent = lambda event: QToolTip.hideText()
         return button
