@@ -61,6 +61,11 @@ class MainWindow(QMainWindow):
         self.run_action.triggered.connect(self.run_script)
         self.addAction(self.run_action)
 
+        self.stop_action = QAction('Stop', self)
+        self.stop_action.setShortcut('Ctrl+T')
+        self.stop_action.triggered.connect(self.stop_script)
+        self.addAction(self.stop_action)
+
         self.edit_config_action = QAction('Edit configuration', self)
         self.edit_config_action.setShortcut('Ctrl+E')
         self.edit_config_action.triggered.connect(self.edit_script_config)
@@ -88,6 +93,9 @@ class MainWindow(QMainWindow):
         self.output_pane.run_script()
         self.run_indication_label.setText('Running...')
         self.run_indication_label.setStyleSheet('color: black')
+
+    def stop_script(self):
+        self.output_pane.stop_script()
 
     def show_finish_result(self, exit_code):
         if exit_code != 0:
