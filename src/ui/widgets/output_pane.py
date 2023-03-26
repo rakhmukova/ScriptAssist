@@ -24,8 +24,8 @@ class OutputPane(QTextEdit):
         if self.script_runner is None:
             self.clear()
             self.script_runner = RunnerFactory.get_runner(self.current_config)
-            self.script_runner.new_error.connect(self.handle_error)
-            self.script_runner.new_output.connect(self.handle_output)
+            self.script_runner.stderr_received.connect(self.handle_error)
+            self.script_runner.stdout_received.connect(self.handle_output)
             self.script_runner.finished.connect(self.handle_finish)
             self.script_runner.run()
 
