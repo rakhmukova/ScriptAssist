@@ -90,10 +90,7 @@ class MainWindow(QMainWindow):
         self.run_indication_label.setStyleSheet('color: black')
 
     def show_finish_result(self, exit_code):
-        if exit_code == 0:
-            result_text = 'Finished successfully'
-        else:
-            result_text = f'Finished with exit code {exit_code}'
+        if exit_code != 0:
             self.run_indication_label.setStyleSheet('color: darkred')
 
-        self.run_indication_label.setText(result_text)
+        self.run_indication_label.setText(f'Finished with exit code {exit_code}')
