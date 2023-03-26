@@ -1,8 +1,7 @@
-from PyQt6.QtCore import pyqtSlot, QThreadPool, pyqtSignal
+from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QTextEdit
 
 from src.models.runner_factory import RunnerFactory
-from src.models.script_runnable import ScriptRunnable
 
 
 class OutputPane(QTextEdit):
@@ -10,6 +9,7 @@ class OutputPane(QTextEdit):
 
     def __init__(self, parent=None):
         super().__init__(parent)
+        self.script_runner = None
         self.current_config = None
         self.setObjectName('outputPane')
 
@@ -21,25 +21,20 @@ class OutputPane(QTextEdit):
         self.clear()
 
     def run_script(self):
-        self.clear()
+        if self.script_runner is None:
+            self.clear()
+            self.script_runner = RunnerFactory.get_runner(self.current_config)
+            self.script_runner.new_error.connect(self.handle_error)
+            self.script_runner.new_output.connect(self.handle_output)
+            self.script_runner.finished.connect(self.handle_finish)
+            self.script_runner.run()
 
-        script_runner = RunnerFactory.get_runner(self.current_config)
-        script_runner.new_output.connect(self.display_stdout)
-        script_runner.new_error.connect(self.display_stderr)
-        script_runner.process_finished.connect(self.handle_finish)
-
-        script_runnable = ScriptRunnable(script_runner)
-        pool = QThreadPool.globalInstance()
-        pool.start(script_runnable)
-
-    @pyqtSlot(str)
-    def display_stdout(self, output):
-        self.append(output)
-
-    @pyqtSlot(str)
-    def display_stderr(self, error):
+    def handle_error(self, error):
         self.append(error)
 
-    @pyqtSlot(int)
+    def handle_output(self, output):
+        self.append(output)
+
     def handle_finish(self, exit_code):
+        self.script_runner = None
         self.script_finished.emit(exit_code)
