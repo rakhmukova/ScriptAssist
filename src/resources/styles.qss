@@ -18,6 +18,11 @@ QPlainTextEdit {
     width: 8px;
 }
 
+#stopButton {
+    background-color: transparent;
+    width: 8px;
+}
+
 #editConfigButton {
     background-color: transparent;
     width: 8px;

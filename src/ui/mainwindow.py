@@ -27,6 +27,7 @@ class MainWindow(QMainWindow):
 
         self.top_panel = TopPanel()
         self.top_panel.run_button.clicked.connect(self.run_script)
+        self.top_panel.stop_button.clicked.connect(self.stop_script)
         self.top_panel.edit_config_button.clicked.connect(self.edit_script_config)
 
         self.editor_pane = EditorPane()
