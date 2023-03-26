@@ -1,6 +1,7 @@
 from PyQt6.QtGui import QColor
 from PyQt6.QtWidgets import QPlainTextEdit, QWidget
 
+from src.models.file_util import FileUtil
 from src.models.keyword_chooser import KeywordChooser
 from src.models.script_config import ScriptConfig
 from src.ui.widgets.keyword_highlighter import KeywordHighlighter
@@ -36,10 +37,9 @@ class EditorPane(QPlainTextEdit):
     def __upload_from_config(self):
         self.clear()
         file_path = self.__current_config.path
-        with open(file_path, 'r') as f:
-            script_content = f.read()
-
-        self.appendPlainText(script_content)
+        script_content = FileUtil.upload_file(file_path)
+        if script_content:
+            self.appendPlainText(script_content)
 
     def save_script(self):
         """
@@ -47,5 +47,4 @@ class EditorPane(QPlainTextEdit):
         """
         file_path = self.__current_config.path
         script_content = self.toPlainText()
-        with open(file_path, 'w') as f:
-            f.write(script_content)
+        FileUtil.save_to_file(file_path, script_content)
