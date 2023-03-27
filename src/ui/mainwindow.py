@@ -1,6 +1,7 @@
 from PyQt6.QtGui import QAction
 from PyQt6.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QHBoxLayout
 
+from src.models.script_config import ScriptConfig
 from src.ui.dialogues.script_config_dialog import ScriptConfigDialog
 from src.ui.widgets.editor_pane import EditorPane
 from src.ui.widgets.line_number_area import LineNumberArea
@@ -10,7 +11,13 @@ from src.ui.widgets.top_panel import TopPanel
 
 
 class MainWindow(QMainWindow):
-    def __init__(self, start_config):
+    def __init__(self, start_config: ScriptConfig):
+        """
+        Constructor for the main window of the ScriptAssist application.
+
+        Args:
+            start_config: The configuration of the script to be loaded on startup.
+        """
         super().__init__()
 
         self.current_config = None
@@ -53,7 +60,7 @@ class MainWindow(QMainWindow):
 
         self.set_script_config(start_config)
 
-    def create_layout(self, layout):
+    def create_layout(self, layout: QVBoxLayout):
         editor_layout = QHBoxLayout()
         editor_layout.setSpacing(0)
         editor_layout.setContentsMargins(0, 0, 0, 0)
@@ -81,7 +88,7 @@ class MainWindow(QMainWindow):
         self.edit_config_action.triggered.connect(self.edit_script_config)
         self.addAction(self.edit_config_action)
 
-    def set_script_config(self, config):
+    def set_script_config(self, config: ScriptConfig):
         self.current_config = config
         self.editor_pane.set_script_config(config)
         self.output_pane.set_script_config(config)
