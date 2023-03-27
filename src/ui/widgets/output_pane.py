@@ -23,7 +23,7 @@ class OutputPane(QTextEdit):
         self.setObjectName('outputPane')
         self.setReadOnly(True)
 
-    def set_script_config(self, script_config: ScriptConfig):
+    def on_config_changed(self, script_config: ScriptConfig):
         """
         Sets the configuration for the script to be run.
 

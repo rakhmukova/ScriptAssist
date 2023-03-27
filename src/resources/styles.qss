@@ -28,7 +28,7 @@ QPlainTextEdit {
     width: 8px;
 }
 
-#runIndicationLabel {
+#scriptStatusLabel {
     padding-left: 2px;
     border-top: 1px solid lightgrey;
     border-bottom: 1px solid lightgrey;
