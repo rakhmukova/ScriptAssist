@@ -12,6 +12,8 @@ class MainWindow(QMainWindow):
     def __init__(self, start_config):
         super().__init__()
 
+        self.current_config = None
+
         self.setWindowTitle('ScriptAssist')
         self.setGeometry(200, 100, 800, 600)
 
@@ -22,8 +24,6 @@ class MainWindow(QMainWindow):
         layout = QVBoxLayout(central_widget)
         layout.setSpacing(0)
         layout.setContentsMargins(0, 0, 0, 0)
-
-        self.current_config = None
 
         self.top_panel = TopPanel()
         self.top_panel.run_button.clicked.connect(self.run_script)
@@ -37,12 +37,6 @@ class MainWindow(QMainWindow):
         self.editor_pane.blockCountChanged.connect(self.line_number_area.update_line_numbers)
         self.editor_pane.verticalScrollBar().valueChanged.connect(self.line_number_area.update_scrollbar)
 
-        editor_layout = QHBoxLayout()
-        editor_layout.setSpacing(0)
-        editor_layout.setContentsMargins(0, 0, 0, 0)
-        editor_layout.addWidget(self.line_number_area)
-        editor_layout.addWidget(self.editor_pane)
-
         self.run_indication_label = QLabel()
         self.run_indication_label.setObjectName('runIndicationLabel')
         self.run_indication_label.setFixedHeight(25)
@@ -50,13 +44,28 @@ class MainWindow(QMainWindow):
         self.output_pane = OutputPane()
         self.output_pane.script_finished.connect(self.show_finish_result)
 
+        self.create_layout(layout)
+
+        self.run_action = None
+        self.stop_action = None
+        self.edit_config_action = None
+        self.create_actions()
+
+        self.set_script_config(start_config)
+
+    def create_layout(self, layout):
+        editor_layout = QHBoxLayout()
+        editor_layout.setSpacing(0)
+        editor_layout.setContentsMargins(0, 0, 0, 0)
+        editor_layout.addWidget(self.line_number_area)
+        editor_layout.addWidget(self.editor_pane)
+
         layout.addWidget(self.top_panel)
         layout.addLayout(editor_layout, stretch=2)
         layout.addWidget(self.run_indication_label)
         layout.addWidget(self.output_pane, stretch=1)
 
-        self.set_script_config(start_config)
-
+    def create_actions(self):
         self.run_action = QAction('Run', self)
         self.run_action.setShortcut('Ctrl+R')
         self.run_action.triggered.connect(self.run_script)
