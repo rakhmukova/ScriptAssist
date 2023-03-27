@@ -1,6 +1,8 @@
 from PyQt6.QtGui import QPixmap, QIcon
 from PyQt6.QtWidgets import QWidget, QHBoxLayout, QLabel, QPushButton, QToolTip
 
+from src.models.script_config import ScriptConfig
+
 
 class TopPanel(QWidget):
     """
@@ -47,3 +49,13 @@ class TopPanel(QWidget):
         button.enterEvent = lambda event: QToolTip.showText(button.mapToGlobal(button.rect().bottomLeft()), tooltip)
         button.leaveEvent = lambda event: QToolTip.hideText()
         return button
+
+    def on_config_changed(self, config: ScriptConfig):
+        """
+        Update the script name label when the configuration has changed.
+
+        :param config: The updated script configuration.
+        :type config: ScriptConfig
+        """
+        file_name = config.path.split('/')[-1]
+        self.script_name_label.setText(file_name)

@@ -23,7 +23,7 @@ class EditorPane(QPlainTextEdit):
         self.__keyword_color = QColor(0, 0, 255)  # blue color
         self.setObjectName('editorPane')
 
-    def set_script_config(self, script_config: ScriptConfig):
+    def on_config_changed(self, script_config: ScriptConfig):
         """
         Sets the current script configuration and updates the editor content.
 

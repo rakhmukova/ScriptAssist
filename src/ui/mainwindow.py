@@ -1,3 +1,4 @@
+from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtGui import QAction
 from PyQt6.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QHBoxLayout
 
@@ -11,6 +12,8 @@ from src.ui.widgets.top_panel import TopPanel
 
 
 class MainWindow(QMainWindow):
+    config_changed = pyqtSignal(object)
+
     def __init__(self, start_config: ScriptConfig):
         """
         Constructor for the main window of the ScriptAssist application.
@@ -20,7 +23,7 @@ class MainWindow(QMainWindow):
         """
         super().__init__()
 
-        self.current_config = None
+        self.__script_config = None
 
         self.setWindowTitle('ScriptAssist')
         self.setGeometry(200, 100, 800, 600)
@@ -59,7 +62,8 @@ class MainWindow(QMainWindow):
         self.edit_config_action = None
         self.create_actions()
 
-        self.set_script_config(start_config)
+        self.subscribe_to_config_change()
+        self.script_config = start_config
 
     def create_layout(self, layout: QVBoxLayout):
         editor_layout = QHBoxLayout()
@@ -89,21 +93,27 @@ class MainWindow(QMainWindow):
         self.edit_config_action.triggered.connect(self.edit_script_config)
         self.addAction(self.edit_config_action)
 
-    def set_script_config(self, config: ScriptConfig):
-        self.current_config = config
-        self.editor_pane.set_script_config(config)
-        self.output_pane.set_script_config(config)
+    def subscribe_to_config_change(self):
+        signaled = self.config_changed
+        signaled.connect(self.editor_pane.on_config_changed)
+        signaled.connect(self.output_pane.on_config_changed)
+        signaled.connect(self.top_panel.on_config_changed)
+        signaled.connect(self.script_status_label.show_ready_status)
 
-        file_name = config.path.split('/')[-1]
-        self.top_panel.script_name_label.setText(file_name)
+    @property
+    def script_config(self):
+        return self.__script_config
 
-        self.script_status_label.show_ready_status()
+    @script_config.setter
+    def script_config(self, config):
+        self.__script_config = config
+        self.config_changed.emit(config)
 
     def edit_script_config(self):
-        config_dialog = ScriptConfigDialog(self.current_config)
+        config_dialog = ScriptConfigDialog(self.__script_config)
         if config_dialog.exec():
             config = config_dialog.get_script_config()
-            self.set_script_config(config)
+            self.script_config = config
 
     def run_script(self):
         self.editor_pane.save_script()
