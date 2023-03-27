@@ -24,6 +24,8 @@ class ScriptStatusLabel(QLabel):
         """
         super().__init__()
 
+        self.setObjectName('runIndicationLabel')
+
     def show_finish_status(self, exit_code: int):
         """
         Sets the widget's text to "Finished with exit code X" and applies dark red styling
