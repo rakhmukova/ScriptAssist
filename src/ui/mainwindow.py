@@ -18,8 +18,7 @@ class MainWindow(QMainWindow):
         """
         Constructor for the main window of the ScriptAssist application.
 
-        Args:
-            start_config: The configuration of the script to be loaded on startup.
+        :param start_config: The configuration of the script to be loaded on startup.
         """
         super().__init__()
 
@@ -37,9 +36,9 @@ class MainWindow(QMainWindow):
         layout.setContentsMargins(0, 0, 0, 0)
 
         self.top_panel = TopPanel()
-        self.top_panel.run_button.clicked.connect(self.run_script)
-        self.top_panel.stop_button.clicked.connect(self.stop_script)
-        self.top_panel.edit_config_button.clicked.connect(self.edit_script_config)
+        self.top_panel.run_button.clicked.connect(self.__run_script)
+        self.top_panel.stop_button.clicked.connect(self.__stop_script)
+        self.top_panel.edit_config_button.clicked.connect(self.__edit_script_config)
 
         self.editor_pane = EditorPane()
 
@@ -55,17 +54,17 @@ class MainWindow(QMainWindow):
         self.output_pane = OutputPane()
         self.output_pane.script_finished.connect(self.script_status_label.show_finish_status)
 
-        self.create_layout(layout)
+        self.__create_layout(layout)
 
         self.run_action = None
         self.stop_action = None
         self.edit_config_action = None
-        self.create_actions()
+        self.__create_actions()
 
-        self.subscribe_to_config_change()
+        self.__subscribe_to_config_change()
         self.script_config = start_config
 
-    def create_layout(self, layout: QVBoxLayout):
+    def __create_layout(self, layout: QVBoxLayout):
         editor_layout = QHBoxLayout()
         editor_layout.setSpacing(0)
         editor_layout.setContentsMargins(0, 0, 0, 0)
@@ -77,23 +76,23 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.script_status_label)
         layout.addWidget(self.output_pane, stretch=1)
 
-    def create_actions(self):
+    def __create_actions(self):
         self.run_action = QAction('Run', self)
         self.run_action.setShortcut('Ctrl+R')
-        self.run_action.triggered.connect(self.run_script)
+        self.run_action.triggered.connect(self.__run_script)
         self.addAction(self.run_action)
 
         self.stop_action = QAction('Stop', self)
         self.stop_action.setShortcut('Ctrl+T')
-        self.stop_action.triggered.connect(self.stop_script)
+        self.stop_action.triggered.connect(self.__stop_script)
         self.addAction(self.stop_action)
 
         self.edit_config_action = QAction('Edit configuration', self)
         self.edit_config_action.setShortcut('Ctrl+E')
-        self.edit_config_action.triggered.connect(self.edit_script_config)
+        self.edit_config_action.triggered.connect(self.__edit_script_config)
         self.addAction(self.edit_config_action)
 
-    def subscribe_to_config_change(self):
+    def __subscribe_to_config_change(self):
         signaled = self.config_changed
         signaled.connect(self.editor_pane.on_config_changed)
         signaled.connect(self.output_pane.on_config_changed)
@@ -109,16 +108,16 @@ class MainWindow(QMainWindow):
         self.__script_config = config
         self.config_changed.emit(config)
 
-    def edit_script_config(self):
-        config_dialog = ScriptConfigDialog(self.__script_config)
+    def __edit_script_config(self):
+        config_dialog = ScriptConfigDialog(self.script_config)
         if config_dialog.exec():
             config = config_dialog.get_script_config()
             self.script_config = config
 
-    def run_script(self):
+    def __run_script(self):
         self.editor_pane.save_script()
         self.output_pane.run_script()
         self.script_status_label.show_run_status()
 
-    def stop_script(self):
+    def __stop_script(self):
         self.output_pane.stop_script()
