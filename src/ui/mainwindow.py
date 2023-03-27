@@ -39,7 +39,7 @@ class MainWindow(QMainWindow):
         self.editor_pane.verticalScrollBar().valueChanged.connect(self.line_number_area.update_scrollbar)
 
         self.script_status_label = ScriptStatusLabel()
-        self.script_status_label.setObjectName('runIndicationLabel')
+        self.script_status_label.setObjectName('scriptStatusLabel')
         self.script_status_label.setFixedHeight(25)
 
         self.output_pane = OutputPane()
