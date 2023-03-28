@@ -1,8 +1,9 @@
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QTextEdit, QWidget
 
-from models.runner_factory import RunnerFactory
+from models.interpreter_factory import InterpreterFactory
 from models.script_config import ScriptConfig
+from models.script_runner import ScriptRunner
 
 
 class OutputPane(QTextEdit):
@@ -38,11 +39,16 @@ class OutputPane(QTextEdit):
         """
         if self.__script_runner is None:
             self.clear()
-            self.__script_runner = RunnerFactory.get_runner(self.__current_config)
-            self.__script_runner.stderr_received.connect(self.__handle_error)
-            self.__script_runner.stdout_received.connect(self.__handle_output)
-            self.__script_runner.finished.connect(self.__handle_finish)
-            self.__script_runner.run()
+            try:
+                script_config = self.__current_config
+                interpreter_config = InterpreterFactory.get_interpreter_config(script_config)
+                self.__script_runner = ScriptRunner(interpreter_config, script_config)
+                self.__script_runner.stderr_received.connect(self.__handle_error)
+                self.__script_runner.stdout_received.connect(self.__handle_output)
+                self.__script_runner.finished.connect(self.__handle_finish)
+                self.__script_runner.run()
+            except ValueError:
+                print('Unsupported script type.')
 
     def stop_script(self):
         """
