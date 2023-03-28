@@ -24,9 +24,13 @@ class FileUtil:
         :param file_type: The file types to be shown in the dialog.
         """
         file_name, _ = QFileDialog.getSaveFileName(parent, 'Select Path', '', file_type)
-        if not os.path.exists(file_name):
-            with open(file_name, 'a'):
-                pass
+        if file_name and not os.path.exists(file_name):
+            # Create a file manually
+            try:
+                with open(file_name, 'a'):
+                    pass
+            except IOError:
+                return ''
         return file_name
 
     @staticmethod
