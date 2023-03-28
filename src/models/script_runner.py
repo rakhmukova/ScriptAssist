@@ -34,6 +34,8 @@ class ScriptRunner(QObject):
     def run(self):
         """
         Starts running the script.
+
+        :raises ValueError: If the interpreter path does not exist.
         """
         program = self.__interpreter_config.path
         if not shutil.which(program):
