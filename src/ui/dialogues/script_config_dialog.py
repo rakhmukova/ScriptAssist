@@ -1,10 +1,17 @@
 from PyQt6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, \
     QComboBox, QDialogButtonBox
+
+from models.script_type import ScriptType
 from src.models.file_util import FileUtil
 from src.models.script_config import ScriptConfig
 
 
 class ScriptConfigDialog(QDialog):
+    _SCRIPT_TYPE_TO_EXTENSION_OPTION = {
+        ScriptType.KOTLIN.value: 'Kotlin Files (*.kts)',
+        ScriptType.SWIFT.value: 'Swift Files (*.swift)'
+    }
+
     """
     A dialog window for configuring a script.
     """
@@ -62,7 +69,9 @@ class ScriptConfigDialog(QDialog):
         self.__script_type_label = QLabel('Script type:')
         self.__script_type_label.setObjectName('scriptTypeLabel')
         self.__script_type_combobox = QComboBox()
-        self.__script_type_combobox.addItems(['Swift', 'Kotlin'])
+        script_types = [script_type.value for script_type in ScriptType
+                        if script_type is not ScriptType.UNDEFINED]
+        self.__script_type_combobox.addItems(script_types)
 
         self.__path_label = QLabel('Script path:')
         self.__path_edit = QLineEdit()
@@ -106,14 +115,14 @@ class ScriptConfigDialog(QDialog):
         self.__path_edit.setText(current_config.path)
         parameters = ' '.join(map(str, current_config.parameters))
         self.__args_edit.setText(parameters)
-        index = self.__script_type_combobox.findText(current_config.script_type)
+        index = self.__script_type_combobox.findText(current_config.script_type.value)
         if index >= 0:
             self.__script_type_combobox.setCurrentIndex(index)
         self.__enable_accept_button(True)
 
     def __browse_path(self):
         script_type = self.__script_type_combobox.currentText()
-        extension_option = 'Kotlin Files (*.kts)' if script_type == 'Kotlin' else 'Swift Files (*.swift)'
+        extension_option = self._SCRIPT_TYPE_TO_EXTENSION_OPTION[script_type]
         if self.to_open:
             file_name = FileUtil.browse_file(self, extension_option)
         else:

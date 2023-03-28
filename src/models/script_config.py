@@ -1,5 +1,7 @@
 import os
 
+from models.script_type import ScriptType
+
 
 class ScriptConfig:
     """
@@ -7,9 +9,8 @@ class ScriptConfig:
     """
 
     _EXTENSION_TO_SCRIPT_TYPE = {
-        '': '',
-        '.kts': 'Kotlin',
-        '.swift': 'Swift',
+        '.kts': ScriptType.KOTLIN,
+        '.swift': ScriptType.SWIFT,
     }
 
     def __init__(self, path: str = '', parameters: list = None):
@@ -46,7 +47,7 @@ class ScriptConfig:
         self.__script_type = self.__define_script_type(new_path)
 
     @property
-    def script_type(self) -> str:
+    def script_type(self) -> ScriptType:
         """
         Gets the script type.
 
@@ -72,7 +73,7 @@ class ScriptConfig:
         """
         self.__parameters = new_parameters
 
-    def __define_script_type(self, path: str) -> str:
+    def __define_script_type(self, path: str) -> ScriptType:
         """
         Determines the script type based on the file extension.
 
@@ -80,4 +81,7 @@ class ScriptConfig:
         :return: The script type.
         """
         _, ext = os.path.splitext(path)
-        return self._EXTENSION_TO_SCRIPT_TYPE[ext]
+        if ext in self._EXTENSION_TO_SCRIPT_TYPE:
+            return self._EXTENSION_TO_SCRIPT_TYPE[ext]
+
+        return ScriptType.UNDEFINED

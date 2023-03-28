@@ -1,5 +1,6 @@
 from models.script_config import ScriptConfig
 from models.script_runner import ScriptRunner
+from models.script_type import ScriptType
 
 
 class RunnerFactory:
@@ -19,7 +20,7 @@ class RunnerFactory:
         return ScriptRunner(interpreter_path, interpreter_options, config.path, config.parameters)
 
     @staticmethod
-    def _get_interpreter_config(script_type: str) -> (str, list):
+    def _get_interpreter_config(script_type: ScriptType) -> (str, list):
         """
         Returns the interpreter path and options for the given script type.
 
@@ -27,12 +28,12 @@ class RunnerFactory:
         :return: A tuple containing the interpreter path and options.
         :raises ValueError: If the script type is not supported.
         """
-        if script_type == 'Kotlin':
+        if script_type == ScriptType.KOTLIN:
             interpreter_path = 'kotlinc'
             interpreter_options = ['-script']
-        elif script_type == 'Swift':
+        elif script_type == ScriptType.SWIFT:
             interpreter_path = '/usr/bin/env'
             interpreter_options = ['swift']
         else:
-            raise ValueError(f'Unsupported script type: {script_type}')
+            raise ValueError('Undefined script type.')
         return interpreter_path, interpreter_options
