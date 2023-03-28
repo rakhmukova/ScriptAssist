@@ -2,13 +2,13 @@ from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtGui import QAction
 from PyQt6.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QHBoxLayout
 
-from src.models.script_config import ScriptConfig
-from src.ui.dialogues.script_config_dialog import ScriptConfigDialog
-from src.ui.widgets.editor_pane import EditorPane
-from src.ui.widgets.line_number_area import LineNumberArea
-from src.ui.widgets.output_pane import OutputPane
-from src.ui.widgets.script_status_label import ScriptStatusLabel
-from src.ui.widgets.top_panel import TopPanel
+from models.script_config import ScriptConfig
+from ui.dialogues.script_config_dialog import ScriptConfigDialog
+from ui.widgets.editor_pane import EditorPane
+from ui.widgets.line_number_area import LineNumberArea
+from ui.widgets.output_pane import OutputPane
+from ui.widgets.script_status_label import ScriptStatusLabel
+from ui.widgets.top_panel import TopPanel
 
 
 class MainWindow(QMainWindow):
