@@ -13,7 +13,7 @@ class ScriptConfig:
         '.swift': ScriptType.SWIFT,
     }
 
-    def __init__(self, path: str = '', parameters: list = None):
+    def __init__(self, path: str = '', parameters: list[str] = None):
         """
         Creates a new ScriptConfig instance.
 
@@ -23,9 +23,8 @@ class ScriptConfig:
         if parameters is None:
             parameters = []
 
-        self.__path = path
-        self.__script_type = self.__define_script_type(path)
-        self.__parameters = parameters
+        self.path = path
+        self.parameters = parameters
 
     @property
     def path(self) -> str:
@@ -65,7 +64,7 @@ class ScriptConfig:
         return self.__parameters
 
     @parameters.setter
-    def parameters(self, new_parameters: list):
+    def parameters(self, new_parameters: list[str]):
         """
         Sets the additional parameters to pass to the script.
 

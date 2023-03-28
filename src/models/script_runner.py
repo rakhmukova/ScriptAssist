@@ -1,5 +1,8 @@
 from PyQt6.QtCore import QObject, pyqtSignal, QProcess
 
+from models.interpreter_config import InterpreterConfig
+from models.script_config import ScriptConfig
+
 
 class ScriptRunner(QObject):
     """
@@ -9,22 +12,16 @@ class ScriptRunner(QObject):
     stderr_received = pyqtSignal(str)
     finished = pyqtSignal(int)
 
-    def __init__(self, interpreter_path: str, interpreter_options: list, script_path: str,
-                 parameters: list = None):
+    def __init__(self, interpreter_config: InterpreterConfig, script_config: ScriptConfig):
         """
         Creates a new ScriptRunner instance.
-
-        :param interpreter_path: The path to the interpreter that should be used to run the script.
-        :param interpreter_options: The options to pass to the interpreter when running the script.
-        :param script_path: The path to the script file.
-        :param parameters: Any additional parameters to pass to the script.
+        :param interpreter_config: The interpreter configuration.
+        :param script_config: The script configuration.
         """
         super().__init__()
-        if parameters is None:
-            parameters = []
 
-        self.program = interpreter_path
-        self.args = interpreter_options + [script_path] + [str(param) for param in parameters]
+        self.__interpreter_config = interpreter_config
+        self.__script_config = script_config
 
         self.process = QProcess()
         self.process.readyReadStandardOutput.connect(self.__handle_stdout)
@@ -35,7 +32,9 @@ class ScriptRunner(QObject):
         """
         Starts running the script.
         """
-        self.process.start(self.program, self.args)
+        program = self.__interpreter_config.path
+        args = self.__interpreter_config.options + [self.__script_config.path] + self.__script_config.parameters
+        self.process.start(program, args)
 
     def cancel(self):
         """
