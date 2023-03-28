@@ -42,7 +42,7 @@ class OutputPane(QTextEdit):
             self.clear()
             try:
                 script_config = self.__current_config
-                interpreter_config = InterpreterFactory.get_interpreter_config(script_config)
+                interpreter_config = InterpreterFactory.get_interpreter_config(script_config.script_type)
                 self.__script_runner = ScriptRunner(interpreter_config, script_config)
                 self.__script_runner.stderr_received.connect(self.__handle_run_error)
                 self.__script_runner.stdout_received.connect(self.__handle_output)
