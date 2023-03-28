@@ -54,10 +54,3 @@ pip3 install -r requirements.txt
 cd src
 python3 main.py
 ```
-
-
-Note: It's recommended to create a virtual environment and activate it before installing the necessary packages and running the application. This will ensure that the dependencies are installed in the virtual environment and that the application runs correctly. To deactivate the virtual environment, you can run the following command:
-```
-deactivate
-```
-This will return you to your system's default Python environment.
