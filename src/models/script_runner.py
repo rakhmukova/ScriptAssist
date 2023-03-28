@@ -1,3 +1,5 @@
+import shutil
+
 from PyQt6.QtCore import QObject, pyqtSignal, QProcess
 
 from models.interpreter_config import InterpreterConfig
@@ -33,6 +35,10 @@ class ScriptRunner(QObject):
         Starts running the script.
         """
         program = self.__interpreter_config.path
+        if not shutil.which(program):
+            self.__clear_process()
+            raise ValueError(f'Interpreter path {program} does not exist.')
+
         args = self.__interpreter_config.options + [self.__script_config.path] + self.__script_config.parameters
         self.process.start(program, args)
 
@@ -55,5 +61,8 @@ class ScriptRunner(QObject):
 
     def __process_finished(self, exit_code: int):
         self.finished.emit(exit_code)
+        self.__clear_process()
+
+    def __clear_process(self):
         self.process.deleteLater()
         self.process = None
