@@ -55,7 +55,7 @@ cd src
 python3 main.py
 ```
 
-6.To deactivate the virtual environment you can run the following command:
+6. To deactivate the virtual environment you can run the following command:
 ```
 deactivate
 ```
