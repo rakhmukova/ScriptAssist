@@ -10,6 +10,7 @@ class OutputPane(QTextEdit):
     """
     A QTextEdit widget that displays output from running a script.
     """
+    script_started = pyqtSignal()
     script_finished = pyqtSignal(int)
 
     def __init__(self, parent: QWidget = None):
@@ -43,12 +44,13 @@ class OutputPane(QTextEdit):
                 script_config = self.__current_config
                 interpreter_config = InterpreterFactory.get_interpreter_config(script_config)
                 self.__script_runner = ScriptRunner(interpreter_config, script_config)
-                self.__script_runner.stderr_received.connect(self.__handle_error)
+                self.__script_runner.stderr_received.connect(self.__handle_run_error)
                 self.__script_runner.stdout_received.connect(self.__handle_output)
+                self.__script_runner.started.connect(self.__handle_start)
                 self.__script_runner.finished.connect(self.__handle_finish)
                 self.__script_runner.run()
-            except ValueError:
-                print('Unsupported script type.')
+            except ValueError as e:
+                self.__handle_start_error(e)
 
     def stop_script(self):
         """
@@ -65,7 +67,7 @@ class OutputPane(QTextEdit):
         self.stop_script()
         self.run_script()
 
-    def __handle_error(self, error: str):
+    def __handle_run_error(self, error: str):
         self.append(error)
 
     def __handle_output(self, output: str):
@@ -74,3 +76,10 @@ class OutputPane(QTextEdit):
     def __handle_finish(self, exit_code: int):
         self.__script_runner = None
         self.script_finished.emit(exit_code)
+
+    def __handle_start(self):
+        self.script_started.emit()
+
+    def __handle_start_error(self, error: ValueError):
+        self.script_finished.emit(1)
+        self.append(str(error))
