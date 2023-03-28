@@ -1,5 +1,5 @@
-from src.models.script_config import ScriptConfig
-from src.models.script_runner import ScriptRunner
+from models.script_config import ScriptConfig
+from models.script_runner import ScriptRunner
 
 
 class RunnerFactory:

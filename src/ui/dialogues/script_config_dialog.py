@@ -1,8 +1,8 @@
 from PyQt6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, \
     QComboBox, QDialogButtonBox
 
-from src.models.file_util import FileUtil
-from src.models.script_config import ScriptConfig
+from models.file_util import FileUtil
+from models.script_config import ScriptConfig
 
 
 class ScriptConfigDialog(QDialog):

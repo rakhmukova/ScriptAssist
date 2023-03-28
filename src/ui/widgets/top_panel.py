@@ -1,7 +1,7 @@
 from PyQt6.QtGui import QPixmap, QIcon
 from PyQt6.QtWidgets import QWidget, QHBoxLayout, QLabel, QPushButton, QToolTip
 
-from src.models.script_config import ScriptConfig
+from models.script_config import ScriptConfig
 
 
 class TopPanel(QWidget):

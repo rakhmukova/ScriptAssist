@@ -1,10 +1,10 @@
 from PyQt6.QtGui import QColor
 from PyQt6.QtWidgets import QPlainTextEdit, QWidget
 
-from src.models.file_util import FileUtil
-from src.models.keyword_chooser import KeywordChooser
-from src.models.script_config import ScriptConfig
-from src.ui.widgets.keyword_highlighter import KeywordHighlighter
+from models.file_util import FileUtil
+from models.keyword_chooser import KeywordChooser
+from models.script_config import ScriptConfig
+from ui.widgets.keyword_highlighter import KeywordHighlighter
 
 
 class EditorPane(QPlainTextEdit):

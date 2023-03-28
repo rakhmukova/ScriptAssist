@@ -1,8 +1,8 @@
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QTextEdit, QWidget
 
-from src.models.runner_factory import RunnerFactory
-from src.models.script_config import ScriptConfig
+from models.runner_factory import RunnerFactory
+from models.script_config import ScriptConfig
 
 
 class OutputPane(QTextEdit):
