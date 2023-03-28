@@ -55,7 +55,7 @@ class ScriptConfig:
         return self.__script_type
 
     @property
-    def parameters(self) -> list:
+    def parameters(self) -> list[str]:
         """
         Gets the additional parameters to pass to the script.
 

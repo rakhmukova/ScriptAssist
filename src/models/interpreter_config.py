@@ -34,7 +34,7 @@ class InterpreterConfig:
         self.__path = new_path
 
     @property
-    def options(self) -> list:
+    def options(self) -> list[str]:
         """
         Gets the list of command-line options to pass to the interpreter
 
@@ -43,7 +43,7 @@ class InterpreterConfig:
         return self.__options
 
     @options.setter
-    def options(self, new_options: list):
+    def options(self, new_options: list[str]):
         """
         Sets the command-line options to pass to the interpreter.
 

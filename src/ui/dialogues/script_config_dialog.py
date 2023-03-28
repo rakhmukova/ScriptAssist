@@ -113,7 +113,7 @@ class ScriptConfigDialog(QDialog):
 
     def __set_initial_values(self, current_config: ScriptConfig):
         self.__path_edit.setText(current_config.path)
-        parameters = ' '.join(map(str, current_config.parameters))
+        parameters = ' '.join(current_config.parameters)
         self.__args_edit.setText(parameters)
         index = self.__script_type_combobox.findText(current_config.script_type.value)
         if index >= 0:
