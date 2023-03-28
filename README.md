@@ -15,21 +15,34 @@ This is a GUI application that allows users to modify a script, execute it and s
 
 ## Installation
 
-To build and run the tool from the provided sources, you need to follow these steps:
+### Requirements
+Before running ensure you have the following software:
+- Python 3.x
+- pip3
 
-1. Install the necessary dependencies:
+To run scripts on the chosen language you need to install the necessary dependencies:
 - For Swift: Download Swift from the official [website](https://www.swift.org/download/).
 - For Kotlin: Install the Kotlin compiler from the official [website](https://kotlinlang.org/docs/command-line.html).
 
-2. Clone the repository:
+
+### Running
+
+1. Clone the repository:
 ```
 git clone https://github.com/rakhmukova/ScriptAssist.git
 ```
 
-3. Change to the project directory:
+2. Change to the project directory:
 ```
 cd ScriptAssist
 ```
+
+3. Create a virtual environment and activate it:
+```
+python3 -m venv venv
+source venv/bin/activate
+```
+
 
 4. Install necessary packages
 ```
@@ -41,3 +54,10 @@ pip3 install -r requirements.txt
 cd src
 python3 main.py
 ```
+
+
+Note: It's recommended to create a virtual environment and activate it before installing the necessary packages and running the application. This will ensure that the dependencies are installed in the virtual environment and that the application runs correctly. To deactivate the virtual environment, you can run the following command:
+```
+deactivate
+```
+This will return you to your system's default Python environment.
