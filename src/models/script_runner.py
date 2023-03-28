@@ -12,6 +12,7 @@ class ScriptRunner(QObject):
     """
     stdout_received = pyqtSignal(str)
     stderr_received = pyqtSignal(str)
+    started = pyqtSignal()
     finished = pyqtSignal(int)
 
     def __init__(self, interpreter_config: InterpreterConfig, script_config: ScriptConfig):
@@ -41,6 +42,7 @@ class ScriptRunner(QObject):
 
         args = self.__interpreter_config.options + [self.__script_config.path] + self.__script_config.parameters
         self.process.start(program, args)
+        self.started.emit()
 
     def cancel(self):
         """

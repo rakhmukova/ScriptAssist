@@ -10,6 +10,7 @@ class OutputPane(QTextEdit):
     """
     A QTextEdit widget that displays output from running a script.
     """
+    script_started = pyqtSignal()
     script_finished = pyqtSignal(int)
 
     def __init__(self, parent: QWidget = None):
@@ -45,6 +46,7 @@ class OutputPane(QTextEdit):
                 self.__script_runner = ScriptRunner(interpreter_config, script_config)
                 self.__script_runner.stderr_received.connect(self.__handle_run_error)
                 self.__script_runner.stdout_received.connect(self.__handle_output)
+                self.__script_runner.started.connect(self.__handle_start)
                 self.__script_runner.finished.connect(self.__handle_finish)
                 self.__script_runner.run()
             except ValueError as e:
@@ -74,6 +76,9 @@ class OutputPane(QTextEdit):
     def __handle_finish(self, exit_code: int):
         self.__script_runner = None
         self.script_finished.emit(exit_code)
+
+    def __handle_start(self):
+        self.script_started.emit()
 
     def __handle_start_error(self, error: ValueError):
         self.script_finished.emit(1)

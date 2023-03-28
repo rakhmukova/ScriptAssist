@@ -52,6 +52,7 @@ class MainWindow(QMainWindow):
         self.__script_status_label.setFixedHeight(25)
 
         self.__output_pane = OutputPane()
+        self.__output_pane.script_started.connect(self.__script_status_label.show_run_status)
         self.__output_pane.script_finished.connect(self.__script_status_label.show_finish_status)
 
         self.__create_layout(layout)
@@ -117,7 +118,6 @@ class MainWindow(QMainWindow):
     def __run_script(self):
         self.__editor_pane.save_script()
         self.__output_pane.run_script()
-        self.__script_status_label.show_run_status()
 
     def __stop_script(self):
         self.__output_pane.stop_script()
