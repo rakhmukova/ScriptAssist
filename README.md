@@ -59,3 +59,10 @@ python3 main.py
 ```
 deactivate
 ```
+
+### Tests
+In order to run tests use the following command in the roor directory:
+```
+pytest
+```
+
