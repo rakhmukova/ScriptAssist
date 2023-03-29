@@ -1,6 +1,6 @@
 import pytest
-from models.script_type import ScriptType
-from models.interpreter_factory import InterpreterFactory
+from src.models.script_type import ScriptType
+from src.models.interpreter_factory import InterpreterFactory
 
 
 class TestInterpreterFactory:

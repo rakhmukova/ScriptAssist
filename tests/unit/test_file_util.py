@@ -1,7 +1,7 @@
 import os
 import pytest
 
-from models.file_util import FileUtil
+from src.models.file_util import FileUtil
 
 
 class TestFileUtil:

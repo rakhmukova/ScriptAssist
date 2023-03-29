@@ -1,12 +1,12 @@
 import pytest
 from PyQt6.QtCore import QCoreApplication
 
-from models.file_util import FileUtil
-from models.interpreter_config import InterpreterConfig
-from models.interpreter_factory import InterpreterFactory
-from models.script_config import ScriptConfig
-from models.script_runner import ScriptRunner
-from models.script_type import ScriptType
+from src.models.file_util import FileUtil
+from src.models.interpreter_config import InterpreterConfig
+from src.models.interpreter_factory import InterpreterFactory
+from src.models.script_config import ScriptConfig
+from src.models.script_runner import ScriptRunner
+from src.models.script_type import ScriptType
 
 
 class TestScriptRunner:
