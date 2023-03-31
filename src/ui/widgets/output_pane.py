@@ -1,17 +1,19 @@
 from PyQt6.QtCore import pyqtSignal
-from PyQt6.QtWidgets import QTextEdit, QWidget
+from PyQt6.QtWidgets import QWidget, QTextBrowser
 
+from models.error_info_extractor import ErrorInfoExtractor
 from models.interpreter_factory import InterpreterFactory
 from models.script_config import ScriptConfig
 from models.script_runner import ScriptRunner
 
 
-class OutputPane(QTextEdit):
+class OutputPane(QTextBrowser):
     """
-    A QTextEdit widget that displays output from running a script.
+    A QTextBrowser widget that displays output from running a script.
     """
     script_started = pyqtSignal()
     script_finished = pyqtSignal(int)
+    on_error_clicked = pyqtSignal(int, int)
 
     def __init__(self, parent: QWidget = None):
         """
@@ -22,8 +24,10 @@ class OutputPane(QTextEdit):
         super().__init__(parent)
         self.__script_runner = None
         self.__current_config = None
+        self.__stderr = ''
         self.setObjectName('outputPane')
-        self.setReadOnly(True)
+        self.setOpenLinks(False)
+        self.anchorClicked.connect(self.__handle_anchor_clicked)
 
     def on_config_changed(self, script_config: ScriptConfig):
         """
@@ -40,6 +44,7 @@ class OutputPane(QTextEdit):
         """
         if self.__script_runner is None:
             self.clear()
+            self.__stderr = ''
             try:
                 script_config = self.__current_config
                 interpreter_config = InterpreterFactory.get_interpreter_config(script_config.script_type)
@@ -68,13 +73,14 @@ class OutputPane(QTextEdit):
         self.run_script()
 
     def __handle_run_error(self, error: str):
-        self.append(error)
+        self.__stderr += error
 
     def __handle_output(self, output: str):
         self.append(output)
 
     def __handle_finish(self, exit_code: int):
         self.__script_runner = None
+        self.__print_errors()
         self.script_finished.emit(exit_code)
 
     def __handle_start(self):
@@ -83,3 +89,18 @@ class OutputPane(QTextEdit):
     def __handle_start_error(self, error: ValueError):
         self.script_finished.emit(1)
         self.append(str(error))
+
+    def __handle_anchor_clicked(self, url):
+        line, column = url.toString().split('.')
+        line, column = int(line), int(column)
+        self.on_error_clicked.emit(line, column)
+
+    def __print_errors(self):
+        if self.__stderr:
+            try:
+                errors = ErrorInfoExtractor.extract_errors(self.__stderr)
+                for error in errors:
+                    self.insertHtml(f'<a href={error.line_number}.{error.column_number}>{error.file_location}</a> ')
+                    self.insertPlainText(error.description)
+            except ValueError as e:
+                self.insertPlainText(str(e))
