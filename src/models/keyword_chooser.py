@@ -17,7 +17,7 @@ class KeywordChooser:
             return ['let', 'var', 'if', 'in', 'else', 'switch', 'case', 'default',
                     'for', 'while', 'continue', 'break', 'return', 'func', 
                     'class', 'struct', 'enum', 'extension', 'protocol', 'init', 'deinit']
-        elif script_type == ScriptType.UNDEFINED:
+        elif script_type == ScriptType.KOTLIN:
             return ['package', 'import', 'class', 'interface', 'fun', 'val',
                     'var', 'if', 'else', 'when', 'is', 'in', 'for', 'while',
                     'do', 'return', 'break', 'continue', 'throw', 'try', 'catch', 'finally']
