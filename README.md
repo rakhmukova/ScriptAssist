@@ -10,7 +10,10 @@ This is a GUI application that allows users to modify a script, execute it and s
 
 ### Edit and execute the script
 
-<img width="1050" alt="image" src="https://user-images.githubusercontent.com/69808568/228077431-7fe80098-601b-45ea-8a04-f59f849a1fee.png">
+
+<img width="1050" alt="image" src="https://user-images.githubusercontent.com/69808568/229319423-4e6afe86-2029-491f-ab95-f9c1f732001c.png">
+
+<img width="1050" alt="image" src="https://user-images.githubusercontent.com/69808568/229319392-999ef698-ab49-4124-9164-29a94e1ccc3f.png">
 
 
 ## Installation
