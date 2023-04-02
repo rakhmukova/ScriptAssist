@@ -1,7 +1,7 @@
 # ScriptAssist
 
 ### Attention: 
-All current changes are made to **dev** branch.
+All new features are implemented in the **dev** branch.
 
 ## About
 This is a GUI application that allows users to modify a script, execute it and see its output side-by-side. The supported scripting languages are Swift and Kotlin.
