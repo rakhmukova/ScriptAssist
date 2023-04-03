@@ -30,9 +30,12 @@ class EditorPane(QPlainTextEdit):
         :param script_config: The script configuration object.
         """
         self.__current_config = script_config
-        self.__upload_from_config()
         keywords = KeywordChooser.get_keywords(self.__current_config.script_type)
-        self.__highlighter = KeywordHighlighter(keywords, self.__keyword_color, self.document())
+        if self.__highlighter is None:
+            self.__highlighter = KeywordHighlighter(keywords, self.__keyword_color, self.document())
+        else:
+            self.__highlighter.keywords = keywords
+        self.__upload_from_config()
 
     def __upload_from_config(self):
         self.clear()
