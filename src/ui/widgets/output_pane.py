@@ -99,8 +99,11 @@ class OutputPane(QTextBrowser):
         if self.__stderr:
             try:
                 errors = ErrorInfoExtractor.extract_errors(self.__stderr)
-                for error in errors:
-                    self.insertHtml(f'<a href={error.line_number}.{error.column_number}>{error.file_location}</a> ')
-                    self.insertPlainText(error.description)
+                if errors:
+                    for error in errors:
+                        self.insertHtml(f'<a href={error.line_number}.{error.column_number}>{error.file_location}</a> ')
+                        self.insertPlainText(f'{error.description}\n')
+                else:
+                    self.insertPlainText(self.__stderr)
             except ValueError as e:
                 self.insertPlainText(str(e))

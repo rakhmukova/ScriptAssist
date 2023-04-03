@@ -52,7 +52,7 @@ class ErrorInfoExtractor:
             start_index, end_index = file_locations[i]
             next_start_index, _ = file_locations[i + 1]
             file_location = error_text[start_index:end_index]
-            error_description = error_text[end_index:next_start_index]
+            error_description = error_text[end_index:next_start_index].split('\n', 1)[0]
             errors.append(ErrorInfo(file_location, error_description))
 
         return errors
