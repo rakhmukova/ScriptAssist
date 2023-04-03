@@ -123,10 +123,11 @@ class ScriptConfigDialog(QDialog):
     def __browse_path(self):
         script_type = self.__script_type_combobox.currentText()
         extension_option = self._SCRIPT_TYPE_TO_EXTENSION_OPTION[script_type]
+        directory = '../example_scripts'
         if self.to_open:
-            file_name = FileUtil.browse_file(self, 'Select File', '', extension_option)
+            file_name = FileUtil.browse_file(self, 'Select File', directory, extension_option)
         else:
-            file_name = FileUtil.save_file(self, 'Select Path', '', extension_option)
+            file_name = FileUtil.save_file(self, 'Select Path', directory, extension_option)
         if file_name:
             self.__path_edit.setText(file_name)
             self.__enable_accept_button(True)
