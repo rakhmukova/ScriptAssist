@@ -32,9 +32,9 @@ class TestErrorInfo:
         stderr = './file-1.swift:1:2: error message\n../path/to/file 2.kts:5:6001: warning ' \
                  'message\n~/path2/to/file_3.py:20:36: note message\n'
         expected_errors = [
-            ErrorInfo('./file-1.swift:1:2:', ' error message\n'),
-            ErrorInfo('../path/to/file 2.kts:5:6001:', ' warning message\n'),
-            ErrorInfo('~/path2/to/file_3.py:20:36:', ' note message\n')
+            ErrorInfo('./file-1.swift:1:2:', ' error message'),
+            ErrorInfo('../path/to/file 2.kts:5:6001:', ' warning message'),
+            ErrorInfo('~/path2/to/file_3.py:20:36:', ' note message')
         ]
 
         actual_errors = ErrorInfoExtractor.extract_errors(stderr)
