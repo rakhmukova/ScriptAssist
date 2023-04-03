@@ -16,13 +16,33 @@ class KeywordHighlighter(QSyntaxHighlighter):
         :param parent: The parent object of the highlighter.
         """
         super().__init__(parent)
+        self.__color = color
+        self.keywords = keywords
+
+    @property
+    def keywords(self) -> list[str]:
+        """
+        Returns the list of keywords used for highlighting in the syntax highlighter.
+
+        :return: A list of strings representing the keywords.
+        """
+        return self.__keywords
+
+    @keywords.setter
+    def keywords(self, keywords: list[str]):
+        """
+        Sets the list of keywords used for highlighting in the syntax highlighter.
+
+        :param keywords: A list of strings representing the keywords.
+        """
         self.__keywords = keywords
         self.__highlighting_rules = []
+        self.__setup_highlighting_rules()
 
-        # Set up highlighting rules for the keywords
+    def __setup_highlighting_rules(self):
         for keyword in self.__keywords:
             pattern = QRegularExpression("\\b" + keyword + "\\b")
-            rule = (pattern, color)
+            rule = (pattern, self.__color)
             self.__highlighting_rules.append(rule)
 
     def highlightBlock(self, text: str):
@@ -31,8 +51,6 @@ class KeywordHighlighter(QSyntaxHighlighter):
 
         :param text: The text block to highlight.
         """
-
-        # Apply the highlighting rules to the text block
         for rule, keyword_format in self.__highlighting_rules:
             match_iterator = rule.globalMatch(text)
             while match_iterator.hasNext():
