@@ -1,17 +1,13 @@
 import os
 
 from models.script_type import ScriptType
+from models.script_type_options import ScriptTypeOptions
 
 
 class ScriptConfig:
     """
     Represents a script configuration, including its path, script type, and parameters.
     """
-
-    _EXTENSION_TO_SCRIPT_TYPE = {
-        '.kts': ScriptType.KOTLIN,
-        '.swift': ScriptType.SWIFT,
-    }
 
     def __init__(self, path: str = '', parameters: list[str] = None):
         """
@@ -72,7 +68,8 @@ class ScriptConfig:
         """
         self.__parameters = new_parameters
 
-    def __define_script_type(self, path: str) -> ScriptType:
+    @staticmethod
+    def __define_script_type(path: str) -> ScriptType:
         """
         Determines the script type based on the file extension.
 
@@ -80,7 +77,4 @@ class ScriptConfig:
         :return: The script type.
         """
         _, ext = os.path.splitext(path)
-        if ext in self._EXTENSION_TO_SCRIPT_TYPE:
-            return self._EXTENSION_TO_SCRIPT_TYPE[ext]
-
-        return ScriptType.UNDEFINED
+        return ScriptTypeOptions.get_script_type(ext)
