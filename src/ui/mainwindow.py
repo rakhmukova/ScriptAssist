@@ -12,7 +12,7 @@ from ui.widgets.top_panel import TopPanel
 
 
 class MainWindow(QMainWindow):
-    config_changed = pyqtSignal(object)
+    script_config_changed = pyqtSignal(object)
 
     def __init__(self, start_config: ScriptConfig):
         """
@@ -95,7 +95,7 @@ class MainWindow(QMainWindow):
         self.addAction(self.__edit_config_action)
 
     def __subscribe_to_config_change(self):
-        signaled = self.config_changed
+        signaled = self.script_config_changed
         signaled.connect(self.__editor_pane.on_config_changed)
         signaled.connect(self.__output_pane.on_config_changed)
         signaled.connect(self.__top_panel.on_config_changed)
@@ -108,13 +108,13 @@ class MainWindow(QMainWindow):
     @script_config.setter
     def script_config(self, config):
         self.__script_config = config
-        self.config_changed.emit(config)
+        self.script_config_changed.emit(config)
 
     def __edit_script_config(self):
         config_dialog = ScriptConfigDialog(self.script_config)
-        if config_dialog.exec():
-            config = config_dialog.get_script_config()
-            self.script_config = config
+        config_dialog.script_config_changed.connect(self.__on_config_changed)
+        config_dialog.exec()
+        config_dialog.script_config_changed.disconnect(self.__on_config_changed)
 
     def __run_script(self):
         self.__editor_pane.save_script()
@@ -122,3 +122,6 @@ class MainWindow(QMainWindow):
 
     def __stop_script(self):
         self.__output_pane.stop_script()
+
+    def __on_config_changed(self, script_config: ScriptConfig):
+        self.script_config = script_config

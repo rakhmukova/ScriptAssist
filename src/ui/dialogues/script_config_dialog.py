@@ -1,3 +1,4 @@
+from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, \
     QComboBox, QDialogButtonBox
 
@@ -7,14 +8,16 @@ from src.models.script_config import ScriptConfig
 
 
 class ScriptConfigDialog(QDialog):
+    """
+    A dialog window for configuring a script.
+    """
+
     _SCRIPT_TYPE_TO_EXTENSION_OPTION = {
         ScriptType.KOTLIN.value: 'Kotlin Files (*.kts)',
         ScriptType.SWIFT.value: 'Swift Files (*.swift)'
     }
 
-    """
-    A dialog window for configuring a script.
-    """
+    script_config_changed = pyqtSignal(ScriptConfig)
 
     def __init__(self, script_config: ScriptConfig = None, parent: QDialog = None, to_open: bool = True):
         """
@@ -54,13 +57,7 @@ class ScriptConfigDialog(QDialog):
         if script_config is not None:
             self.__set_initial_values(script_config)
 
-    def get_script_config(self) -> ScriptConfig:
-        """
-        Get the ScriptConfig object representing the current configuration.
-
-        :return: a ScriptConfig object.
-        """
-
+    def __get_script_config(self) -> ScriptConfig:
         path = self.__path_edit.text()
         args = self.__args_edit.text().split()
         return ScriptConfig(path, args)
@@ -107,7 +104,7 @@ class ScriptConfigDialog(QDialog):
 
     def __create_connections(self):
         self.__path_button.clicked.connect(self.__browse_path)
-        self.__button_box.accepted.connect(self.accept)
+        self.__button_box.accepted.connect(self.__accept)
         self.__button_box.rejected.connect(self.reject)
         self.__script_type_combobox.currentIndexChanged.connect(self.__script_type_changed)
 
@@ -138,3 +135,8 @@ class ScriptConfigDialog(QDialog):
 
     def __enable_accept_button(self, to_enable: bool):
         self.__button_box.button(QDialogButtonBox.StandardButton.Ok).setEnabled(to_enable)
+
+    def __accept(self):
+        script_config = self.__get_script_config()
+        self.script_config_changed.emit(script_config)
+        self.accept()
