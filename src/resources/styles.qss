@@ -32,8 +32,14 @@ QPlainTextEdit {
     padding-left: 2px;
     border-top: 1px solid lightgrey;
     border-bottom: 1px solid lightgrey;
+    background-color: transparent;
 }
 
 #outputPane {
     border: 0;
+}
+
+#topPanel {
+    border-bottom: 1px solid lightgrey;
+    background-color: transparent;
 }
