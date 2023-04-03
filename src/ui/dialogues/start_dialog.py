@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import QDialog, QHBoxLayout, QPushButton
 
 from models.script_config import ScriptConfig
-from src.ui.dialogues.script_config_dialog import ScriptConfigDialog
+from ui.dialogues.script_config_dialog import ScriptConfigDialog
 
 
 class StartDialog(QDialog):
