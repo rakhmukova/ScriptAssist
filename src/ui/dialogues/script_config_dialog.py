@@ -2,7 +2,7 @@ from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, \
     QComboBox, QDialogButtonBox
 
-from models.script_type import ScriptType
+from models.script_type_options import ScriptTypeOptions
 from src.models.file_util import FileUtil
 from src.models.script_config import ScriptConfig
 
@@ -11,11 +11,6 @@ class ScriptConfigDialog(QDialog):
     """
     A dialog window for configuring a script.
     """
-
-    _SCRIPT_TYPE_TO_EXTENSION_OPTION = {
-        ScriptType.KOTLIN.value: 'Kotlin Files (*.kts)',
-        ScriptType.SWIFT.value: 'Swift Files (*.swift)'
-    }
 
     script_config_changed = pyqtSignal(ScriptConfig)
 
@@ -66,8 +61,7 @@ class ScriptConfigDialog(QDialog):
         self.__script_type_label = QLabel('Script type:')
         self.__script_type_label.setObjectName('scriptTypeLabel')
         self.__script_type_combobox = QComboBox()
-        script_types = [script_type.value for script_type in ScriptType
-                        if script_type is not ScriptType.UNDEFINED]
+        script_types = ScriptTypeOptions.get_available_script_type_names()
         self.__script_type_combobox.addItems(script_types)
 
         self.__path_label = QLabel('Script path:')
@@ -119,7 +113,7 @@ class ScriptConfigDialog(QDialog):
 
     def __browse_path(self):
         script_type = self.__script_type_combobox.currentText()
-        extension_option = self._SCRIPT_TYPE_TO_EXTENSION_OPTION[script_type]
+        extension_option = ScriptTypeOptions.get_extension_option(script_type)
         directory = '../example_scripts'
         if self.to_open:
             file_name = FileUtil.browse_file(self, 'Select File', directory, extension_option)
