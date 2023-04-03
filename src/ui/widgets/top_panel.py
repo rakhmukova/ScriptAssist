@@ -1,12 +1,13 @@
 from PyQt6.QtGui import QPixmap, QIcon
-from PyQt6.QtWidgets import QWidget, QHBoxLayout, QLabel, QPushButton, QToolTip
+from PyQt6.QtWidgets import QHBoxLayout, QLabel, QPushButton, QToolTip, QFrame
 
 from models.script_config import ScriptConfig
 
 
-class TopPanel(QWidget):
+class TopPanel(QFrame):
     """
-    A widget that displays a top panel with script information and buttons for running and stopping the script.
+    A frame that displays a top panel with script information and buttons for running, stopping the script
+    and editing its configuration.
     """
 
     def __init__(self, parent=None):
