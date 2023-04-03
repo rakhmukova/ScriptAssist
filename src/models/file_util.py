@@ -6,24 +6,30 @@ from PyQt6.QtWidgets import QFileDialog, QWidget
 
 class FileUtil:
     @staticmethod
-    def browse_file(parent: QWidget = None, file_type: str = 'All Files (*)') -> str:
+    def browse_file(parent: QWidget = None, caption: str = '', directory: str = '',
+                    file_type: str = 'All Files (*)') -> str:
         """Open a file dialog to select a file.
 
+        :param directory: The default directory to browse files in.
+        :param caption: The caption for the file dialog.
         :param parent: The parent widget for the file dialog.
         :param file_type: The file types to be shown in the dialog.
         :return: The selected file's path.
         """
-        file_path, _ = QFileDialog.getOpenFileName(parent, 'Select File', '', file_type)
+        file_path, _ = QFileDialog.getOpenFileName(parent, caption, directory, file_type)
         return file_path
 
     @staticmethod
-    def save_file(parent: QWidget = None, file_type: str = 'All Files (*)') -> str:
+    def save_file(parent: QWidget = None, caption: str = '', directory: str = '',
+                  file_type: str = 'All Files (*)') -> str:
         """Open a file dialog to save a file.
 
+        :param directory: The default directory to save files in.
+        :param caption: The caption for the file dialog.
         :param parent: The parent widget for the file dialog.
         :param file_type: The file types to be shown in the dialog.
         """
-        file_name, _ = QFileDialog.getSaveFileName(parent, 'Select Path', '', file_type)
+        file_name, _ = QFileDialog.getSaveFileName(parent, caption, directory, file_type)
         if file_name and not os.path.exists(file_name):
             # Create a file manually
             try:
