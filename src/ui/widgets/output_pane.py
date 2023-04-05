@@ -101,7 +101,8 @@ class OutputPane(QTextBrowser):
             return
 
         try:
-            transformed_stderr = ErrorLocationFormatter.format_error_locations(self.__stderr)
+            transformed_stderr = ErrorLocationFormatter.format_error_locations(self.__stderr,
+                                                                               self.__current_config.path)
             self.append(transformed_stderr)
         except ValueError as e:
             self.insertPlainText(str(e))

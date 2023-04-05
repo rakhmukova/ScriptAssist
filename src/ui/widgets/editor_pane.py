@@ -45,14 +45,6 @@ class EditorPane(QPlainTextEdit):
         if script_content:
             self.appendPlainText(script_content)
 
-    def save_script(self):
-        """
-        Saves the editor content to the current script file.
-        """
-        file_path = self.__current_config.path
-        script_content = self.toPlainText()
-        FileUtil.save_to_file(file_path, script_content)
-
     def move_cursor_to_error_location(self, error_location: ErrorLocation):
         """
         Moves the text cursor to the specified line and column in the text edit widget.
