@@ -5,7 +5,7 @@ from ui.mainwindow import MainWindow
 
 if __name__ == '__main__':
     app = QApplication([])
-    with open("resources/styles.qss", "r") as file:
+    with open('resources/styles.qss', 'r') as file:
         app.setStyleSheet(file.read())
 
     start_dialog = StartDialog()
