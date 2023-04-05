@@ -12,7 +12,7 @@ class ErrorLocationFormatter:
     """
 
     # valid only for Linux and macOS
-    __ERROR_LOCATION_PATTERN = r'((~|\.\.|\.)?/[\w\d_\s.-]+(/[\w\d_\s.-]+)*.\w+):(\d+):(\d+):'
+    __ERROR_LOCATION_PATTERN = '((~|\\.\\.|\\.)?/[\\w\\d_\\s.-]+(/[\\w\\d_\\s.-]+)*\\.\\w+):(\\d+):(\\d+):'
 
     @staticmethod
     def format_error_locations(stderr: str, script_path: str) -> str:
