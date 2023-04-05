@@ -1,3 +1,4 @@
+import os
 from typing import List, Tuple
 
 from PyQt6.QtCore import QRegularExpression, QRegularExpressionMatch
@@ -14,10 +15,11 @@ class ErrorLocationFormatter:
     __ERROR_LOCATION_PATTERN = r'((~|\.\.|\.)?/[\w\d_\s.-]+(/[\w\d_\s.-]+)*.\w+):(\d+):(\d+):'
 
     @staticmethod
-    def format_error_locations(stderr: str) -> str:
+    def format_error_locations(stderr: str, script_path: str) -> str:
         """
         Returns a transformed version of the input error string with links to error locations.
 
+        :param script_path: The current config script path.
         :param str stderr: The error string to transform.
         :return: The transformed error string with error location links.
         """
@@ -27,7 +29,11 @@ class ErrorLocationFormatter:
 
         transformed_stderr = ''
         for error_location, error_description in error_locations_and_descriptions:
-            transformed_stderr += ErrorLocationFormatter.__create_link(error_location)
+            # We can only link errors that occur in the script path.
+            if ErrorLocationFormatter.__are_paths_same(script_path, error_location.file_path):
+                transformed_stderr += ErrorLocationFormatter.__create_link(error_location)
+            else:
+                transformed_stderr += str(error_location)
             transformed_stderr += f'{error_description}<br>'
 
         return transformed_stderr
@@ -57,3 +63,9 @@ class ErrorLocationFormatter:
     def __create_link(error_location: ErrorLocation):
         link_text = str(error_location)
         return f'<a href="{link_text}">{link_text}:</a>'
+
+    @staticmethod
+    def __are_paths_same(first_path: str, second_path: str) -> bool:
+        first_norm_path = os.path.normpath(second_path)
+        second_norm_path = os.path.normpath(first_path)
+        return first_norm_path == second_norm_path
