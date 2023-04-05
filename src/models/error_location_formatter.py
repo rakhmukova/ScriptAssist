@@ -55,6 +55,5 @@ class ErrorLocationFormatter:
 
     @staticmethod
     def __create_link(error_location: ErrorLocation):
-        link_text = f'{error_location.file_path}:{error_location.line_number}:{error_location.column_number}'
-        link_href = f'{error_location.line_number}.{error_location.column_number}'
-        return f'<a href="{link_href}">{link_text}:</a>'
+        link_text = str(error_location)
+        return f'<a href="{link_text}">{link_text}:</a>'

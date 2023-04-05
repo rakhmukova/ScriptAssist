@@ -1,6 +1,7 @@
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QWidget, QTextBrowser
 
+from models.error_location import ErrorLocation
 from models.error_location_formatter import ErrorLocationFormatter
 from models.interpreter_factory import InterpreterFactory
 from models.script_config import ScriptConfig
@@ -13,7 +14,7 @@ class OutputPane(QTextBrowser):
     """
     script_started = pyqtSignal()
     script_finished = pyqtSignal(int)
-    on_error_clicked = pyqtSignal(int, int)
+    on_error_clicked = pyqtSignal(object)
 
     def __init__(self, parent: QWidget = None):
         """
@@ -91,9 +92,9 @@ class OutputPane(QTextBrowser):
         self.append(str(error))
 
     def __handle_anchor_clicked(self, url):
-        line, column = url.toString().split('.')
-        line, column = int(line), int(column)
-        self.on_error_clicked.emit(line, column)
+        link = url.toString()
+        error_location = ErrorLocation.from_string(link)
+        self.on_error_clicked.emit(error_location)
 
     def __print_errors(self):
         if not self.__stderr:

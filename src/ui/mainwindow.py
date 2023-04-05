@@ -54,7 +54,7 @@ class MainWindow(QMainWindow):
         self.__output_pane = OutputPane()
         self.__output_pane.script_started.connect(self.__script_status_label.show_run_status)
         self.__output_pane.script_finished.connect(self.__script_status_label.show_finish_status)
-        self.__output_pane.on_error_clicked.connect(self.__editor_pane.move_cursor_to_line_and_column)
+        self.__output_pane.on_error_clicked.connect(self.__editor_pane.move_cursor_to_error_location)
 
         self.__create_layout(layout)
 
