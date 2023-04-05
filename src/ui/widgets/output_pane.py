@@ -1,7 +1,7 @@
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QWidget, QTextBrowser
 
-from models.error_info_extractor import ErrorInfoExtractor
+from models.error_location_formatter import ErrorLocationFormatter
 from models.interpreter_factory import InterpreterFactory
 from models.script_config import ScriptConfig
 from models.script_runner import ScriptRunner
@@ -96,14 +96,11 @@ class OutputPane(QTextBrowser):
         self.on_error_clicked.emit(line, column)
 
     def __print_errors(self):
-        if self.__stderr:
-            try:
-                errors = ErrorInfoExtractor.extract_errors(self.__stderr)
-                if errors:
-                    for error in errors:
-                        self.insertHtml(f'<a href={error.line_number}.{error.column_number}>{error.file_location}</a> ')
-                        self.insertPlainText(f'{error.description}\n')
-                else:
-                    self.insertPlainText(self.__stderr)
-            except ValueError as e:
-                self.insertPlainText(str(e))
+        if not self.__stderr:
+            return
+
+        try:
+            transformed_stderr = ErrorLocationFormatter.format_error_locations(self.__stderr)
+            self.append(transformed_stderr)
+        except ValueError as e:
+            self.insertPlainText(str(e))
