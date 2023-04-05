@@ -1,7 +1,8 @@
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QWidget, QTextBrowser
 
-from models.error_info_extractor import ErrorInfoExtractor
+from models.error_location import ErrorLocation
+from models.error_location_formatter import ErrorLocationFormatter
 from models.interpreter_factory import InterpreterFactory
 from models.script_config import ScriptConfig
 from models.script_runner import ScriptRunner
@@ -13,7 +14,7 @@ class OutputPane(QTextBrowser):
     """
     script_started = pyqtSignal()
     script_finished = pyqtSignal(int)
-    on_error_clicked = pyqtSignal(int, int)
+    on_error_clicked = pyqtSignal(object)
 
     def __init__(self, parent: QWidget = None):
         """
@@ -91,19 +92,16 @@ class OutputPane(QTextBrowser):
         self.append(str(error))
 
     def __handle_anchor_clicked(self, url):
-        line, column = url.toString().split('.')
-        line, column = int(line), int(column)
-        self.on_error_clicked.emit(line, column)
+        link = url.toString()
+        error_location = ErrorLocation.from_string(link)
+        self.on_error_clicked.emit(error_location)
 
     def __print_errors(self):
-        if self.__stderr:
-            try:
-                errors = ErrorInfoExtractor.extract_errors(self.__stderr)
-                if errors:
-                    for error in errors:
-                        self.insertHtml(f'<a href={error.line_number}.{error.column_number}>{error.file_location}</a> ')
-                        self.insertPlainText(f'{error.description}\n')
-                else:
-                    self.insertPlainText(self.__stderr)
-            except ValueError as e:
-                self.insertPlainText(str(e))
+        if not self.__stderr:
+            return
+
+        try:
+            transformed_stderr = ErrorLocationFormatter.format_error_locations(self.__stderr)
+            self.append(transformed_stderr)
+        except ValueError as e:
+            self.insertPlainText(str(e))

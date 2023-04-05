@@ -1,6 +1,7 @@
 from PyQt6.QtGui import QColor, QTextCursor
 from PyQt6.QtWidgets import QPlainTextEdit, QWidget
 
+from models.error_location import ErrorLocation
 from models.file_util import FileUtil
 from models.keyword_chooser import KeywordChooser
 from models.script_config import ScriptConfig
@@ -52,16 +53,16 @@ class EditorPane(QPlainTextEdit):
         script_content = self.toPlainText()
         FileUtil.save_to_file(file_path, script_content)
 
-    def move_cursor_to_line_and_column(self, line: int, column: int):
+    def move_cursor_to_error_location(self, error_location: ErrorLocation):
         """
         Moves the text cursor to the specified line and column in the text edit widget.
         """
-        block = self.document().findBlockByLineNumber(line - 1)
+        block = self.document().findBlockByLineNumber(error_location.line_number - 1)
         if not block.isValid():
             return
 
         cursor = QTextCursor(block)
-        cursor.setPosition(block.position() + column - 1)
+        cursor.setPosition(block.position() + error_location.column_number - 1)
         self.setTextCursor(cursor)
         self.ensureCursorVisible()
         self.setFocus()
