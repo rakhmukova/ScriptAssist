@@ -1,17 +1,20 @@
 from PyQt6.QtCore import pyqtSignal
-from PyQt6.QtWidgets import QTextEdit, QWidget
+from PyQt6.QtWidgets import QWidget, QTextBrowser
 
+from models.error_location import ErrorLocation
+from models.error_location_formatter import ErrorLocationFormatter
 from models.interpreter_factory import InterpreterFactory
 from models.script_config import ScriptConfig
 from models.script_runner import ScriptRunner
 
 
-class OutputPane(QTextEdit):
+class OutputPane(QTextBrowser):
     """
-    A QTextEdit widget that displays output from running a script.
+    A QTextBrowser widget that displays output from running a script.
     """
     script_started = pyqtSignal()
     script_finished = pyqtSignal(int)
+    on_error_clicked = pyqtSignal(object)
 
     def __init__(self, parent: QWidget = None):
         """
@@ -22,8 +25,10 @@ class OutputPane(QTextEdit):
         super().__init__(parent)
         self.__script_runner = None
         self.__current_config = None
+        self.__stderr = ''
         self.setObjectName('outputPane')
-        self.setReadOnly(True)
+        self.setOpenLinks(False)
+        self.anchorClicked.connect(self.__handle_anchor_clicked)
 
     def on_config_changed(self, script_config: ScriptConfig):
         """
@@ -40,6 +45,7 @@ class OutputPane(QTextEdit):
         """
         if self.__script_runner is None:
             self.clear()
+            self.__stderr = ''
             try:
                 script_config = self.__current_config
                 interpreter_config = InterpreterFactory.get_interpreter_config(script_config.script_type)
@@ -68,13 +74,14 @@ class OutputPane(QTextEdit):
         self.run_script()
 
     def __handle_run_error(self, error: str):
-        self.append(error)
+        self.__stderr += error
 
     def __handle_output(self, output: str):
         self.append(output)
 
     def __handle_finish(self, exit_code: int):
         self.__script_runner = None
+        self.__print_errors()
         self.script_finished.emit(exit_code)
 
     def __handle_start(self):
@@ -83,3 +90,19 @@ class OutputPane(QTextEdit):
     def __handle_start_error(self, error: ValueError):
         self.script_finished.emit(1)
         self.append(str(error))
+
+    def __handle_anchor_clicked(self, url):
+        link = url.toString()
+        error_location = ErrorLocation.from_string(link)
+        self.on_error_clicked.emit(error_location)
+
+    def __print_errors(self):
+        if not self.__stderr:
+            return
+
+        try:
+            transformed_stderr = ErrorLocationFormatter.format_error_locations(self.__stderr,
+                                                                               self.__current_config.path)
+            self.append(transformed_stderr)
+        except ValueError as e:
+            self.insertPlainText(str(e))

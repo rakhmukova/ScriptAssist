@@ -1,6 +1,7 @@
-from PyQt6.QtGui import QColor
+from PyQt6.QtGui import QColor, QTextCursor
 from PyQt6.QtWidgets import QPlainTextEdit, QWidget
 
+from models.error_location import ErrorLocation
 from models.file_util import FileUtil
 from models.keyword_chooser import KeywordChooser
 from models.script_config import ScriptConfig
@@ -30,9 +31,12 @@ class EditorPane(QPlainTextEdit):
         :param script_config: The script configuration object.
         """
         self.__current_config = script_config
-        self.__upload_from_config()
         keywords = KeywordChooser.get_keywords(self.__current_config.script_type)
-        self.__highlighter = KeywordHighlighter(keywords, self.__keyword_color, self.document())
+        if self.__highlighter is None:
+            self.__highlighter = KeywordHighlighter(keywords, self.__keyword_color, self.document())
+        else:
+            self.__highlighter.keywords = keywords
+        self.__upload_from_config()
 
     def __upload_from_config(self):
         self.clear()
@@ -41,10 +45,16 @@ class EditorPane(QPlainTextEdit):
         if script_content:
             self.appendPlainText(script_content)
 
-    def save_script(self):
+    def move_cursor_to_error_location(self, error_location: ErrorLocation):
         """
-        Saves the editor content to the current script file.
+        Moves the text cursor to the specified line and column in the text edit widget.
         """
-        file_path = self.__current_config.path
-        script_content = self.toPlainText()
-        FileUtil.save_to_file(file_path, script_content)
+        block = self.document().findBlockByLineNumber(error_location.line_number - 1)
+        if not block.isValid():
+            return
+
+        cursor = QTextCursor(block)
+        cursor.setPosition(block.position() + error_location.column_number - 1)
+        self.setTextCursor(cursor)
+        self.ensureCursorVisible()
+        self.setFocus()

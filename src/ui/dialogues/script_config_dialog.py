@@ -1,20 +1,18 @@
+from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, \
     QComboBox, QDialogButtonBox
 
-from models.script_type import ScriptType
-from src.models.file_util import FileUtil
-from src.models.script_config import ScriptConfig
+from models.script_type_options import ScriptTypeOptions
+from models.file_util import FileUtil
+from models.script_config import ScriptConfig
 
 
 class ScriptConfigDialog(QDialog):
-    _SCRIPT_TYPE_TO_EXTENSION_OPTION = {
-        ScriptType.KOTLIN.value: 'Kotlin Files (*.kts)',
-        ScriptType.SWIFT.value: 'Swift Files (*.swift)'
-    }
-
     """
     A dialog window for configuring a script.
     """
+
+    script_config_changed = pyqtSignal(ScriptConfig)
 
     def __init__(self, script_config: ScriptConfig = None, parent: QDialog = None, to_open: bool = True):
         """
@@ -54,13 +52,7 @@ class ScriptConfigDialog(QDialog):
         if script_config is not None:
             self.__set_initial_values(script_config)
 
-    def get_script_config(self) -> ScriptConfig:
-        """
-        Get the ScriptConfig object representing the current configuration.
-
-        :return: a ScriptConfig object.
-        """
-
+    def __get_script_config(self) -> ScriptConfig:
         path = self.__path_edit.text()
         args = self.__args_edit.text().split()
         return ScriptConfig(path, args)
@@ -69,8 +61,7 @@ class ScriptConfigDialog(QDialog):
         self.__script_type_label = QLabel('Script type:')
         self.__script_type_label.setObjectName('scriptTypeLabel')
         self.__script_type_combobox = QComboBox()
-        script_types = [script_type.value for script_type in ScriptType
-                        if script_type is not ScriptType.UNDEFINED]
+        script_types = ScriptTypeOptions.get_available_script_type_names()
         self.__script_type_combobox.addItems(script_types)
 
         self.__path_label = QLabel('Script path:')
@@ -107,7 +98,7 @@ class ScriptConfigDialog(QDialog):
 
     def __create_connections(self):
         self.__path_button.clicked.connect(self.__browse_path)
-        self.__button_box.accepted.connect(self.accept)
+        self.__button_box.accepted.connect(self.__accept)
         self.__button_box.rejected.connect(self.reject)
         self.__script_type_combobox.currentIndexChanged.connect(self.__script_type_changed)
 
@@ -122,11 +113,12 @@ class ScriptConfigDialog(QDialog):
 
     def __browse_path(self):
         script_type = self.__script_type_combobox.currentText()
-        extension_option = self._SCRIPT_TYPE_TO_EXTENSION_OPTION[script_type]
+        extension_option = ScriptTypeOptions.get_extension_option(script_type)
+        directory = '../example_scripts'
         if self.to_open:
-            file_name = FileUtil.browse_file(self, extension_option)
+            file_name = FileUtil.browse_file(self, 'Select File', directory, extension_option)
         else:
-            file_name = FileUtil.save_file(self, extension_option)
+            file_name = FileUtil.save_file(self, 'Select Path', directory, extension_option)
         if file_name:
             self.__path_edit.setText(file_name)
             self.__enable_accept_button(True)
@@ -137,3 +129,8 @@ class ScriptConfigDialog(QDialog):
 
     def __enable_accept_button(self, to_enable: bool):
         self.__button_box.button(QDialogButtonBox.StandardButton.Ok).setEnabled(to_enable)
+
+    def __accept(self):
+        script_config = self.__get_script_config()
+        self.script_config_changed.emit(script_config)
+        self.accept()

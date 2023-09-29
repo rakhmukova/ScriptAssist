@@ -1,6 +1,7 @@
 from PyQt6.QtWidgets import QDialog, QHBoxLayout, QPushButton
 
-from src.ui.dialogues.script_config_dialog import ScriptConfigDialog
+from models.script_config import ScriptConfig
+from ui.dialogues.script_config_dialog import ScriptConfigDialog
 
 
 class StartDialog(QDialog):
@@ -41,11 +42,15 @@ class StartDialog(QDialog):
         """
 
         config_dialog = ScriptConfigDialog(script_config=self.__script_config, to_open=to_open)
-        if config_dialog.exec():
+        config_dialog.script_config_changed.connect(self.__on_config_changed)
+        if config_dialog.exec() == QDialog.DialogCode.Accepted:
             self.accept()
-            self.__script_config = config_dialog.get_script_config()
 
-    def get_script_config(self):
+    def __on_config_changed(self, script_config: ScriptConfig):
+        self.__script_config = script_config
+
+    @property
+    def script_config(self):
         """
         Get the script configuration object.
 
