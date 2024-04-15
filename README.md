@@ -43,27 +43,15 @@ git clone https://github.com/rakhmukova/ScriptAssist.git
 cd ScriptAssist
 ```
 
-3. Create a virtual environment and activate it:
-```
-python3 -m venv venv
-source venv/bin/activate
-```
-
-
-4. Install necessary packages
+3. Install necessary packages
 ```
 pip3 install -r requirements.txt
 ```
 
-5. Run the application
+4. Run the application
 ```
 cd src
 python3 main.py
-```
-
-6. To deactivate the virtual environment you can run the following command:
-```
-deactivate
 ```
 
 ### Tests
