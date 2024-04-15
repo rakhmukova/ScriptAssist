@@ -1,9 +1,5 @@
 # ScriptAssist
 
-### Attention: 
-All new features are implemented in the **dev** branch.
-
-## About
 This is a GUI application that allows users to modify a script, execute it and see its output side-by-side. The supported scripting languages are Swift and Kotlin.
 
 
@@ -25,10 +21,6 @@ This is a GUI application that allows users to modify a script, execute it and s
 Before running ensure you have the following software:
 - Python 3.x
 - pip3
-
-To run scripts on the chosen language you need to install the necessary dependencies:
-- For Swift: Download Swift from the official [website](https://www.swift.org/download/).
-- For Kotlin: Install the Kotlin compiler from the official [website](https://kotlinlang.org/docs/command-line.html).
 
 
 ### Running
